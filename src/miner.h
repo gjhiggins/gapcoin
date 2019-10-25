@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GAPCOIN_MINER_H
-#define GAPCOIN_MINER_H
+#ifndef BITCOIN_MINER_H
+#define BITCOIN_MINER_H
 
 #include <stdint.h>
 
@@ -31,4 +31,4 @@ extern uint64_t nMiningSieveSize;
 extern uint64_t nMiningPrimes;
 extern uint16_t nMiningShift;
 
-#endif // GAPCOIN_MINER_H
+#endif // BITCOIN_MINER_H

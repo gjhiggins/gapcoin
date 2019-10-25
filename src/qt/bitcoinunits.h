@@ -2,30 +2,30 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GAPCOINUNITS_H
-#define GAPCOINUNITS_H
+#ifndef BITCOINUNITS_H
+#define BITCOINUNITS_H
 
 #include <QAbstractListModel>
 #include <QString>
 
-/** Gapcoin unit definitions. Encapsulates parsing and formatting
+/** Bitcoin unit definitions. Encapsulates parsing and formatting
    and serves as list model for drop-down selection boxes.
 */
-class GapcoinUnits: public QAbstractListModel
+class BitcoinUnits: public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit GapcoinUnits(QObject *parent);
+    explicit BitcoinUnits(QObject *parent);
 
-    /** Gapcoin units.
-      @note Source: https://en.gapcoin.it/wiki/Units . Please add only sensible ones
+    /** Bitcoin units.
+      @note Source: https://en.bitcoin.it/wiki/Units . Please add only sensible ones
      */
     enum Unit
     {
-        GAP,
-        mGAP,
-        uGAP
+        BTC,
+        mBTC,
+        uBTC
     };
 
     //! @name Static API
@@ -68,8 +68,8 @@ public:
     ///@}
 
 private:
-    QList<GapcoinUnits::Unit> unitlist;
+    QList<BitcoinUnits::Unit> unitlist;
 };
-typedef GapcoinUnits::Unit GapcoinUnit;
+typedef BitcoinUnits::Unit BitcoinUnit;
 
-#endif // GAPCOINUNITS_H
+#endif // BITCOINUNITS_H

@@ -7,7 +7,7 @@
 #include "ui_aboutdialog.h"
 #include "ui_helpmessagedialog.h"
 
-#include "gapcoingui.h"
+#include "bitcoingui.h"
 #include "clientmodel.h"
 #include "guiutil.h"
 
@@ -69,7 +69,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent) :
         tr("Usage:") + "\n" +
         "  gapcoin-qt [" + tr("command-line options") + "]                     " + "\n";
 
-    coreOptions = QString::fromStdString(HelpMessage(HMM_GAPCOIN_QT));
+    coreOptions = QString::fromStdString(HelpMessage(HMM_BITCOIN_QT));
 
     uiOptions = tr("UI options") + ":\n" +
         "  -choosedatadir            " + tr("Choose data directory on startup (default: 0)") + "\n" +
@@ -78,7 +78,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent) :
         "  -rootcertificates=<file>  " + tr("Set SSL root certificates for payment request (default: -system-)") + "\n" +
         "  -splash                   " + tr("Show splash screen on startup (default: 1)");
 
-    ui->helpMessageLabel->setFont(GUIUtil::gapcoinAddressFont());
+    ui->helpMessageLabel->setFont(GUIUtil::bitcoinAddressFont());
 
     // Set help message text
     ui->helpMessageLabel->setText(header + "\n" + coreOptions + "\n" + uiOptions);
@@ -115,7 +115,7 @@ void HelpMessageDialog::on_okButton_accepted()
 
 
 /** "Shutdown" window */
-void ShutdownWindow::showShutdownWindow(GapcoinGUI *window)
+void ShutdownWindow::showShutdownWindow(BitcoinGUI *window)
 {
     if (!window)
         return;

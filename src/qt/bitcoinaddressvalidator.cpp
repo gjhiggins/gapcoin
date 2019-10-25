@@ -2,7 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "gapcoinaddressvalidator.h"
+#include "bitcoinaddressvalidator.h"
 
 #include "base58.h"
 
@@ -15,12 +15,12 @@
   - All lower-case letters except for 'l'
 */
 
-GapcoinAddressEntryValidator::GapcoinAddressEntryValidator(QObject *parent) :
+BitcoinAddressEntryValidator::BitcoinAddressEntryValidator(QObject *parent) :
     QValidator(parent)
 {
 }
 
-QValidator::State GapcoinAddressEntryValidator::validate(QString &input, int &pos) const
+QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &pos) const
 {
     Q_UNUSED(pos);
 
@@ -80,16 +80,16 @@ QValidator::State GapcoinAddressEntryValidator::validate(QString &input, int &po
     return state;
 }
 
-GapcoinAddressCheckValidator::GapcoinAddressCheckValidator(QObject *parent) :
+BitcoinAddressCheckValidator::BitcoinAddressCheckValidator(QObject *parent) :
     QValidator(parent)
 {
 }
 
-QValidator::State GapcoinAddressCheckValidator::validate(QString &input, int &pos) const
+QValidator::State BitcoinAddressCheckValidator::validate(QString &input, int &pos) const
 {
     Q_UNUSED(pos);
-    // Validate the passed Gapcoin address
-    CGapcoinAddress addr(input.toStdString());
+    // Validate the passed Bitcoin address
+    CBitcoinAddress addr(input.toStdString());
     if (addr.IsValid())
         return QValidator::Acceptable;
 

@@ -3,11 +3,11 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GAPCOIN_MAIN_H
-#define GAPCOIN_MAIN_H
+#ifndef BITCOIN_MAIN_H
+#define BITCOIN_MAIN_H
 
 #if defined(HAVE_CONFIG_H)
-#include "gapcoin-config.h"
+#include "bitcoin-config.h"
 #endif
 
 #include "bignum.h"

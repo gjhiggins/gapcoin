@@ -34,11 +34,11 @@ endif
 
 nodist_test_gapcoin_qt_SOURCES = $(TEST_QT_MOC_CPP)
 
-test_gapcoin_qt_LDADD = $(LIBGAPCOINQT) $(LIBGAPCOIN_SERVER)
+test_gapcoin_qt_LDADD = $(LIBBITCOINQT) $(LIBBITCOIN_SERVER)
 if ENABLE_WALLET
-test_gapcoin_qt_LDADD += $(LIBGAPCOIN_WALLET)
+test_gapcoin_qt_LDADD += $(LIBBITCOIN_WALLET)
 endif
-test_gapcoin_qt_LDADD += $(LIBGAPCOIN_CLI) $(LIBGAPCOIN_COMMON) $(LIBLEVELDB) \
+test_gapcoin_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBLEVELDB) \
   $(LIBMEMENV) $(BOOST_LIBS) $(QT_DBUS_LIBS) $(QT_TEST_LIBS) $(QT_LIBS) \
   $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS)
 test_gapcoin_qt_LDFLAGS = $(QT_LDFLAGS)

@@ -6,7 +6,7 @@
 
 #include "addressbookpage.h"
 #include "askpassphrasedialog.h"
-#include "gapcoingui.h"
+#include "bitcoingui.h"
 #include "clientmodel.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
@@ -78,7 +78,7 @@ WalletView::~WalletView()
 {
 }
 
-void WalletView::setGapcoinGUI(GapcoinGUI *gui)
+void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 {
     if (gui)
     {

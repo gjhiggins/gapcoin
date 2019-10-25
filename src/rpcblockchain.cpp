@@ -533,7 +533,7 @@ Value listprimerecords(const Array& params, bool fHelp)
         entry.push_back(Pair("height", pindex->nHeight));
         entry.push_back(Pair("ismine", pwalletMain->IsMine(block.vtx[0])));
         CTxDestination address;
-        entry.push_back(Pair("mineraddress", (block.vtx[0].vout.size() > 1)? "multiple" : ExtractDestination(block.vtx[0].vout[0].scriptPubKey, address)? CGapcoinAddress(address).ToString().c_str() : "invalid"));
+        entry.push_back(Pair("mineraddress", (block.vtx[0].vout.size() > 1)? "multiple" : ExtractDestination(block.vtx[0].vout[0].scriptPubKey, address)? CBitcoinAddress(address).ToString().c_str() : "invalid"));
         entry.push_back(Pair("gapstart", bnStart.ToString()));
         entry.push_back(Pair("gapend", bnEnd.ToString()));
         entry.push_back(Pair("gaplen", pow.gap_len()));
@@ -614,7 +614,7 @@ Value listbestprimes(const Array& params, bool fHelp)
         entry.push_back(Pair("height", pindex->nHeight));
         entry.push_back(Pair("ismine", pwalletMain->IsMine(block.vtx[0])));
         CTxDestination address;
-        entry.push_back(Pair("mineraddress", (block.vtx[0].vout.size() > 1)? "multiple" : ExtractDestination(block.vtx[0].vout[0].scriptPubKey, address)? CGapcoinAddress(address).ToString().c_str() : "invalid"));
+        entry.push_back(Pair("mineraddress", (block.vtx[0].vout.size() > 1)? "multiple" : ExtractDestination(block.vtx[0].vout[0].scriptPubKey, address)? CBitcoinAddress(address).ToString().c_str() : "invalid"));
         entry.push_back(Pair("gapstart", bnStart.ToString()));
         entry.push_back(Pair("gapend", bnEnd.ToString()));
         entry.push_back(Pair("gaplen", pow.gap_len()));

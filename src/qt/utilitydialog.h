@@ -8,7 +8,7 @@
 #include <QDialog>
 #include <QObject>
 
-class GapcoinGUI;
+class BitcoinGUI;
 class ClientModel;
 
 namespace Ui {
@@ -63,7 +63,7 @@ class ShutdownWindow : public QObject
     Q_OBJECT
 
 public:
-    static void showShutdownWindow(GapcoinGUI *window);
+    static void showShutdownWindow(BitcoinGUI *window);
 };
 
 #endif // UTILITYDIALOG_H

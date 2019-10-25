@@ -2,9 +2,9 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "gapcoingui.h"
+#include "bitcoingui.h"
 
-#include "gapcoinunits.h"
+#include "bitcoinunits.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
@@ -55,9 +55,9 @@
 #include <QUrlQuery>
 #endif
 
-const QString GapcoinGUI::DEFAULT_WALLET = "~Default";
+const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
 
-GapcoinGUI::GapcoinGUI(bool fIsTestnet, QWidget *parent) :
+BitcoinGUI::BitcoinGUI(bool fIsTestnet, QWidget *parent) :
     QMainWindow(parent),
     clientModel(0),
     walletFrame(0),
@@ -89,20 +89,20 @@ GapcoinGUI::GapcoinGUI(bool fIsTestnet, QWidget *parent) :
     if (!fIsTestnet)
     {
 #ifndef Q_OS_MAC
-        QApplication::setWindowIcon(QIcon(":icons/gapcoin"));
-        setWindowIcon(QIcon(":icons/gapcoin"));
+        QApplication::setWindowIcon(QIcon(":icons/bitcoin"));
+        setWindowIcon(QIcon(":icons/bitcoin"));
 #else
-        MacDockIconHandler::instance()->setIcon(QIcon(":icons/gapcoin"));
+        MacDockIconHandler::instance()->setIcon(QIcon(":icons/bitcoin"));
 #endif
     }
     else
     {
         windowTitle += " " + tr("[testnet]");
 #ifndef Q_OS_MAC
-        QApplication::setWindowIcon(QIcon(":icons/gapcoin_testnet"));
-        setWindowIcon(QIcon(":icons/gapcoin_testnet"));
+        QApplication::setWindowIcon(QIcon(":icons/bitcoin_testnet"));
+        setWindowIcon(QIcon(":icons/bitcoin_testnet"));
 #else
-        MacDockIconHandler::instance()->setIcon(QIcon(":icons/gapcoin_testnet"));
+        MacDockIconHandler::instance()->setIcon(QIcon(":icons/bitcoin_testnet"));
 #endif
     }
     setWindowTitle(windowTitle);
@@ -201,7 +201,7 @@ GapcoinGUI::GapcoinGUI(bool fIsTestnet, QWidget *parent) :
     subscribeToCoreSignals();
 }
 
-GapcoinGUI::~GapcoinGUI()
+BitcoinGUI::~BitcoinGUI()
 {
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();
@@ -215,7 +215,7 @@ GapcoinGUI::~GapcoinGUI()
 #endif
 }
 
-void GapcoinGUI::createActions(bool fIsTestnet)
+void BitcoinGUI::createActions(bool fIsTestnet)
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
@@ -263,9 +263,9 @@ void GapcoinGUI::createActions(bool fIsTestnet)
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
     if (!fIsTestnet)
-        aboutAction = new QAction(QIcon(":/icons/gapcoin"), tr("&About Gapcoin Core"), this);
+        aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About Gapcoin Core"), this);
     else
-        aboutAction = new QAction(QIcon(":/icons/gapcoin_testnet"), tr("&About Gapcoin Core"), this);
+        aboutAction = new QAction(QIcon(":/icons/bitcoin_testnet"), tr("&About Gapcoin Core"), this);
     aboutAction->setStatusTip(tr("Show information about Gapcoin"));
     aboutAction->setMenuRole(QAction::AboutRole);
 #if QT_VERSION < 0x050000
@@ -279,9 +279,9 @@ void GapcoinGUI::createActions(bool fIsTestnet)
     optionsAction->setStatusTip(tr("Modify configuration options for Gapcoin"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     if (!fIsTestnet)
-        toggleHideAction = new QAction(QIcon(":/icons/gapcoin"), tr("&Show / Hide"), this);
+        toggleHideAction = new QAction(QIcon(":/icons/bitcoin"), tr("&Show / Hide"), this);
     else
-        toggleHideAction = new QAction(QIcon(":/icons/gapcoin_testnet"), tr("&Show / Hide"), this);
+        toggleHideAction = new QAction(QIcon(":/icons/bitcoin_testnet"), tr("&Show / Hide"), this);
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
@@ -331,7 +331,7 @@ void GapcoinGUI::createActions(bool fIsTestnet)
 #endif
 }
 
-void GapcoinGUI::createMenuBar()
+void BitcoinGUI::createMenuBar()
 {
 #ifdef Q_OS_MAC
     // Create a decoupled menu bar on Mac which stays even if the window is closed
@@ -376,7 +376,7 @@ void GapcoinGUI::createMenuBar()
     help->addAction(aboutQtAction);
 }
 
-void GapcoinGUI::createToolBars()
+void BitcoinGUI::createToolBars()
 {
     if(walletFrame)
     {
@@ -390,7 +390,7 @@ void GapcoinGUI::createToolBars()
     }
 }
 
-void GapcoinGUI::setClientModel(ClientModel *clientModel)
+void BitcoinGUI::setClientModel(ClientModel *clientModel)
 {
     this->clientModel = clientModel;
     if(clientModel)
@@ -420,7 +420,7 @@ void GapcoinGUI::setClientModel(ClientModel *clientModel)
 }
 
 #ifdef ENABLE_WALLET
-bool GapcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
+bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
 {
     if(!walletFrame)
         return false;
@@ -428,14 +428,14 @@ bool GapcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     return walletFrame->addWallet(name, walletModel);
 }
 
-bool GapcoinGUI::setCurrentWallet(const QString& name)
+bool BitcoinGUI::setCurrentWallet(const QString& name)
 {
     if(!walletFrame)
         return false;
     return walletFrame->setCurrentWallet(name);
 }
 
-void GapcoinGUI::removeAllWallets()
+void BitcoinGUI::removeAllWallets()
 {
     if(!walletFrame)
         return;
@@ -444,7 +444,7 @@ void GapcoinGUI::removeAllWallets()
 }
 #endif
 
-void GapcoinGUI::setWalletActionsEnabled(bool enabled)
+void BitcoinGUI::setWalletActionsEnabled(bool enabled)
 {
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
@@ -460,7 +460,7 @@ void GapcoinGUI::setWalletActionsEnabled(bool enabled)
     openAction->setEnabled(enabled);
 }
 
-void GapcoinGUI::createTrayIcon(bool fIsTestnet)
+void BitcoinGUI::createTrayIcon(bool fIsTestnet)
 {
 #ifndef Q_OS_MAC
     trayIcon = new QSystemTrayIcon(this);
@@ -482,7 +482,7 @@ void GapcoinGUI::createTrayIcon(bool fIsTestnet)
     notificator = new Notificator(QApplication::applicationName(), trayIcon, this);
 }
 
-void GapcoinGUI::createTrayIconMenu()
+void BitcoinGUI::createTrayIconMenu()
 {
     QMenu *trayIconMenu;
 #ifndef Q_OS_MAC
@@ -520,7 +520,7 @@ void GapcoinGUI::createTrayIconMenu()
 }
 
 #ifndef Q_OS_MAC
-void GapcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+void BitcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if(reason == QSystemTrayIcon::Trigger)
     {
@@ -530,7 +530,7 @@ void GapcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 #endif
 
-void GapcoinGUI::optionsClicked()
+void BitcoinGUI::optionsClicked()
 {
     if(!clientModel || !clientModel->getOptionsModel())
         return;
@@ -540,7 +540,7 @@ void GapcoinGUI::optionsClicked()
     dlg.exec();
 }
 
-void GapcoinGUI::aboutClicked()
+void BitcoinGUI::aboutClicked()
 {
     if(!clientModel)
         return;
@@ -550,7 +550,7 @@ void GapcoinGUI::aboutClicked()
     dlg.exec();
 }
 
-void GapcoinGUI::showHelpMessageClicked()
+void BitcoinGUI::showHelpMessageClicked()
 {
     HelpMessageDialog *help = new HelpMessageDialog(this);
     help->setAttribute(Qt::WA_DeleteOnClose);
@@ -558,7 +558,7 @@ void GapcoinGUI::showHelpMessageClicked()
 }
 
 #ifdef ENABLE_WALLET
-void GapcoinGUI::openClicked()
+void BitcoinGUI::openClicked()
 {
     OpenURIDialog dlg(this);
     if(dlg.exec())
@@ -567,42 +567,42 @@ void GapcoinGUI::openClicked()
     }
 }
 
-void GapcoinGUI::gotoOverviewPage()
+void BitcoinGUI::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
 }
 
-void GapcoinGUI::gotoHistoryPage()
+void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
 }
 
-void GapcoinGUI::gotoReceiveCoinsPage()
+void BitcoinGUI::gotoReceiveCoinsPage()
 {
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
 }
 
-void GapcoinGUI::gotoSendCoinsPage(QString addr)
+void BitcoinGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
 }
 
-void GapcoinGUI::gotoSignMessageTab(QString addr)
+void BitcoinGUI::gotoSignMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoSignMessageTab(addr);
 }
 
-void GapcoinGUI::gotoVerifyMessageTab(QString addr)
+void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
 }
 #endif
 
-void GapcoinGUI::setNumConnections(int count)
+void BitcoinGUI::setNumConnections(int count)
 {
     QString icon;
     switch(count)
@@ -617,7 +617,7 @@ void GapcoinGUI::setNumConnections(int count)
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Gapcoin network", "", count));
 }
 
-void GapcoinGUI::setNumBlocks(int count, int nTotalBlocks)
+void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
 {
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbelled text)
     statusBar()->clearMessage();
@@ -731,7 +731,7 @@ void GapcoinGUI::setNumBlocks(int count, int nTotalBlocks)
     progressBar->setToolTip(tooltip);
 }
 
-void GapcoinGUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
+void BitcoinGUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
 {
     QString strTitle = tr("Gapcoin"); // default title
     // Default to information icon
@@ -794,7 +794,7 @@ void GapcoinGUI::message(const QString &title, const QString &message, unsigned 
         notificator->notify((Notificator::Class)nNotifyIcon, strTitle, message);
 }
 
-void GapcoinGUI::changeEvent(QEvent *e)
+void BitcoinGUI::changeEvent(QEvent *e)
 {
     QMainWindow::changeEvent(e);
 #ifndef Q_OS_MAC // Ignored on Mac
@@ -813,7 +813,7 @@ void GapcoinGUI::changeEvent(QEvent *e)
 #endif
 }
 
-void GapcoinGUI::closeEvent(QCloseEvent *event)
+void BitcoinGUI::closeEvent(QCloseEvent *event)
 {
     if(clientModel)
     {
@@ -829,7 +829,7 @@ void GapcoinGUI::closeEvent(QCloseEvent *event)
 }
 
 #ifdef ENABLE_WALLET
-void GapcoinGUI::incomingTransaction(const QString& date, int unit, qint64 amount, const QString& type, const QString& address)
+void BitcoinGUI::incomingTransaction(const QString& date, int unit, qint64 amount, const QString& type, const QString& address)
 {
     // On new transaction, make an info balloon
     message((amount)<0 ? tr("Sent transaction") : tr("Incoming transaction"),
@@ -838,20 +838,20 @@ void GapcoinGUI::incomingTransaction(const QString& date, int unit, qint64 amoun
                 "Type: %3\n"
                 "Address: %4\n")
                   .arg(date)
-                  .arg(GapcoinUnits::formatWithUnit(unit, amount, true))
+                  .arg(BitcoinUnits::formatWithUnit(unit, amount, true))
                   .arg(type)
                   .arg(address), CClientUIInterface::MSG_INFORMATION);
 }
 #endif
 
-void GapcoinGUI::dragEnterEvent(QDragEnterEvent *event)
+void BitcoinGUI::dragEnterEvent(QDragEnterEvent *event)
 {
     // Accept only URIs
     if(event->mimeData()->hasUrls())
         event->acceptProposedAction();
 }
 
-void GapcoinGUI::dropEvent(QDropEvent *event)
+void BitcoinGUI::dropEvent(QDropEvent *event)
 {
     if(event->mimeData()->hasUrls())
     {
@@ -863,7 +863,7 @@ void GapcoinGUI::dropEvent(QDropEvent *event)
     event->acceptProposedAction();
 }
 
-bool GapcoinGUI::eventFilter(QObject *object, QEvent *event)
+bool BitcoinGUI::eventFilter(QObject *object, QEvent *event)
 {
     // Catch status tip events
     if (event->type() == QEvent::StatusTip)
@@ -876,7 +876,7 @@ bool GapcoinGUI::eventFilter(QObject *object, QEvent *event)
 }
 
 #ifdef ENABLE_WALLET
-bool GapcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
+bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
     // URI has to be valid
     if (walletFrame && walletFrame->handlePaymentRequest(recipient))
@@ -889,7 +889,7 @@ bool GapcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
         return false;
 }
 
-void GapcoinGUI::setEncryptionStatus(int status)
+void BitcoinGUI::setEncryptionStatus(int status)
 {
     switch(status)
     {
@@ -919,7 +919,7 @@ void GapcoinGUI::setEncryptionStatus(int status)
 }
 #endif
 
-void GapcoinGUI::showNormalIfMinimized(bool fToggleHidden)
+void BitcoinGUI::showNormalIfMinimized(bool fToggleHidden)
 {
     // activateWindow() (sometimes) helps with keyboard focus on Windows
     if (isHidden())
@@ -941,12 +941,12 @@ void GapcoinGUI::showNormalIfMinimized(bool fToggleHidden)
         hide();
 }
 
-void GapcoinGUI::toggleHidden()
+void BitcoinGUI::toggleHidden()
 {
     showNormalIfMinimized(true);
 }
 
-void GapcoinGUI::detectShutdown()
+void BitcoinGUI::detectShutdown()
 {
     if (ShutdownRequested())
     {
@@ -956,7 +956,7 @@ void GapcoinGUI::detectShutdown()
     }
 }
 
-static bool ThreadSafeMessageBox(GapcoinGUI *gui, const std::string& message, const std::string& caption, unsigned int style)
+static bool ThreadSafeMessageBox(BitcoinGUI *gui, const std::string& message, const std::string& caption, unsigned int style)
 {
     bool modal = (style & CClientUIInterface::MODAL);
     bool ret = false;
@@ -970,13 +970,13 @@ static bool ThreadSafeMessageBox(GapcoinGUI *gui, const std::string& message, co
     return ret;
 }
 
-void GapcoinGUI::subscribeToCoreSignals()
+void BitcoinGUI::subscribeToCoreSignals()
 {
     // Connect signals to client
     uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
 }
 
-void GapcoinGUI::unsubscribeFromCoreSignals()
+void BitcoinGUI::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from client
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));

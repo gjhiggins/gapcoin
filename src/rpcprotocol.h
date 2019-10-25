@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef _GAPCOINRPC_PROTOCOL_H_
-#define _GAPCOINRPC_PROTOCOL_H_ 1
+#ifndef _BITCOINRPC_PROTOCOL_H_
+#define _BITCOINRPC_PROTOCOL_H_ 1
 
 #include <list>
 #include <map>
@@ -30,7 +30,7 @@ enum HTTPStatusCode
     HTTP_INTERNAL_SERVER_ERROR = 500,
 };
 
-// Gapcoin RPC error codes
+// Bitcoin RPC error codes
 enum RPCErrorCode
 {
     // Standard JSON-RPC 2.0 errors

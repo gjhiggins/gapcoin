@@ -4,7 +4,7 @@
 
 #include "walletframe.h"
 
-#include "gapcoingui.h"
+#include "bitcoingui.h"
 #include "walletview.h"
 
 #include <cstdio>
@@ -12,7 +12,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-WalletFrame::WalletFrame(GapcoinGUI *_gui) :
+WalletFrame::WalletFrame(BitcoinGUI *_gui) :
     QFrame(_gui),
     gui(_gui)
 {
@@ -43,7 +43,7 @@ bool WalletFrame::addWallet(const QString& name, WalletModel *walletModel)
         return false;
 
     WalletView *walletView = new WalletView(this);
-    walletView->setGapcoinGUI(gui);
+    walletView->setBitcoinGUI(gui);
     walletView->setClientModel(clientModel);
     walletView->setWalletModel(walletModel);
     walletView->showOutOfSyncWarning(bOutOfSync);

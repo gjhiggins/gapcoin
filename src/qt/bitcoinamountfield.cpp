@@ -2,9 +2,9 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "gapcoinamountfield.h"
+#include "bitcoinamountfield.h"
 
-#include "gapcoinunits.h"
+#include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "qvaluecombobox.h"
 
@@ -14,7 +14,7 @@
 #include <QKeyEvent>
 #include <qmath.h> // for qPow()
 
-GapcoinAmountField::GapcoinAmountField(QWidget *parent) :
+BitcoinAmountField::BitcoinAmountField(QWidget *parent) :
     QWidget(parent),
     amount(0),
     currentUnit(-1)
@@ -29,7 +29,7 @@ GapcoinAmountField::GapcoinAmountField(QWidget *parent) :
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(amount);
     unit = new QValueComboBox(this);
-    unit->setModel(new GapcoinUnits(this));
+    unit->setModel(new BitcoinUnits(this));
     layout->addWidget(unit);
     layout->addStretch(1);
     layout->setContentsMargins(0,0,0,0);
@@ -47,7 +47,7 @@ GapcoinAmountField::GapcoinAmountField(QWidget *parent) :
     unitChanged(unit->currentIndex());
 }
 
-void GapcoinAmountField::setText(const QString &text)
+void BitcoinAmountField::setText(const QString &text)
 {
     if (text.isEmpty())
         amount->clear();
@@ -55,20 +55,20 @@ void GapcoinAmountField::setText(const QString &text)
         amount->setValue(text.toDouble());
 }
 
-void GapcoinAmountField::clear()
+void BitcoinAmountField::clear()
 {
     amount->clear();
     unit->setCurrentIndex(0);
 }
 
-bool GapcoinAmountField::validate()
+bool BitcoinAmountField::validate()
 {
     bool valid = true;
     if (amount->value() == 0.0)
         valid = false;
-    else if (!GapcoinUnits::parse(currentUnit, text(), 0))
+    else if (!BitcoinUnits::parse(currentUnit, text(), 0))
         valid = false;
-    else if (amount->value() > GapcoinUnits::maxAmount(currentUnit))
+    else if (amount->value() > BitcoinUnits::maxAmount(currentUnit))
         valid = false;
 
     setValid(valid);
@@ -76,7 +76,7 @@ bool GapcoinAmountField::validate()
     return valid;
 }
 
-void GapcoinAmountField::setValid(bool valid)
+void BitcoinAmountField::setValid(bool valid)
 {
     if (valid)
         amount->setStyleSheet("");
@@ -84,7 +84,7 @@ void GapcoinAmountField::setValid(bool valid)
         amount->setStyleSheet(STYLE_INVALID);
 }
 
-QString GapcoinAmountField::text() const
+QString BitcoinAmountField::text() const
 {
     if (amount->text().isEmpty())
         return QString();
@@ -92,7 +92,7 @@ QString GapcoinAmountField::text() const
         return amount->text();
 }
 
-bool GapcoinAmountField::eventFilter(QObject *object, QEvent *event)
+bool BitcoinAmountField::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::FocusIn)
     {
@@ -113,17 +113,17 @@ bool GapcoinAmountField::eventFilter(QObject *object, QEvent *event)
     return QWidget::eventFilter(object, event);
 }
 
-QWidget *GapcoinAmountField::setupTabChain(QWidget *prev)
+QWidget *BitcoinAmountField::setupTabChain(QWidget *prev)
 {
     QWidget::setTabOrder(prev, amount);
     QWidget::setTabOrder(amount, unit);
     return unit;
 }
 
-qint64 GapcoinAmountField::value(bool *valid_out) const
+qint64 BitcoinAmountField::value(bool *valid_out) const
 {
     qint64 val_out = 0;
-    bool valid = GapcoinUnits::parse(currentUnit, text(), &val_out);
+    bool valid = BitcoinUnits::parse(currentUnit, text(), &val_out);
     if (valid_out)
     {
         *valid_out = valid;
@@ -131,24 +131,24 @@ qint64 GapcoinAmountField::value(bool *valid_out) const
     return val_out;
 }
 
-void GapcoinAmountField::setValue(qint64 value)
+void BitcoinAmountField::setValue(qint64 value)
 {
-    setText(GapcoinUnits::format(currentUnit, value));
+    setText(BitcoinUnits::format(currentUnit, value));
 }
 
-void GapcoinAmountField::setReadOnly(bool fReadOnly)
+void BitcoinAmountField::setReadOnly(bool fReadOnly)
 {
     amount->setReadOnly(fReadOnly);
     unit->setEnabled(!fReadOnly);
 }
 
-void GapcoinAmountField::unitChanged(int idx)
+void BitcoinAmountField::unitChanged(int idx)
 {
     // Use description tooltip for current unit for the combobox
     unit->setToolTip(unit->itemData(idx, Qt::ToolTipRole).toString());
 
     // Determine new unit ID
-    int newUnit = unit->itemData(idx, GapcoinUnits::UnitRole).toInt();
+    int newUnit = unit->itemData(idx, BitcoinUnits::UnitRole).toInt();
 
     // Parse current value and convert to new unit
     bool valid = false;
@@ -157,9 +157,9 @@ void GapcoinAmountField::unitChanged(int idx)
     currentUnit = newUnit;
 
     // Set max length after retrieving the value, to prevent truncation
-    amount->setDecimals(GapcoinUnits::decimals(currentUnit));
-    amount->setMaximum(qPow(10, GapcoinUnits::amountDigits(currentUnit)) - qPow(10, -amount->decimals()));
-    amount->setSingleStep((double)nSingleStep / (double)GapcoinUnits::factor(currentUnit));
+    amount->setDecimals(BitcoinUnits::decimals(currentUnit));
+    amount->setMaximum(qPow(10, BitcoinUnits::amountDigits(currentUnit)) - qPow(10, -amount->decimals()));
+    amount->setSingleStep((double)nSingleStep / (double)BitcoinUnits::factor(currentUnit));
 
     if (valid)
     {
@@ -174,12 +174,12 @@ void GapcoinAmountField::unitChanged(int idx)
     setValid(true);
 }
 
-void GapcoinAmountField::setDisplayUnit(int newUnit)
+void BitcoinAmountField::setDisplayUnit(int newUnit)
 {
     unit->setValue(newUnit);
 }
 
-void GapcoinAmountField::setSingleStep(qint64 step)
+void BitcoinAmountField::setSingleStep(qint64 step)
 {
     nSingleStep = step;
     unitChanged(unit->currentIndex());

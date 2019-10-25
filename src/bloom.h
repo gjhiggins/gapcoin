@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GAPCOIN_BLOOM_H
-#define GAPCOIN_BLOOM_H
+#ifndef BITCOIN_BLOOM_H
+#define BITCOIN_BLOOM_H
 
 #include "serialize.h"
 
@@ -89,4 +89,4 @@ public:
     void UpdateEmptyFull();
 };
 
-#endif /* GAPCOIN_BLOOM_H */
+#endif /* BITCOIN_BLOOM_H */

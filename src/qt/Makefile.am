@@ -6,11 +6,11 @@ AM_CPPFLAGS += -I$(top_srcdir)/src \
   $(PROTOBUF_CFLAGS) \
   $(QR_CFLAGS)
 bin_PROGRAMS = gapcoin-qt
-noinst_LIBRARIES = libgapcoinqt.a
-SUBDIRS = . $(BUILD_TEST_QT)
-DIST_SUBDIRS = . test
+noinst_LIBRARIES = libbitcoinqt.a
+SUBDIRS = $(BUILD_TEST_QT)
+DIST_SUBDIRS = test
 
-# gapcoin qt core #
+# bitcoin qt core #
 QT_TS = \
   locale/gapcoin_ach.ts \
   locale/gapcoin_af_ZA.ts \
@@ -107,10 +107,10 @@ QT_MOC_CPP = \
   moc_addressbookpage.cpp \
   moc_addresstablemodel.cpp \
   moc_askpassphrasedialog.cpp \
-  moc_gapcoinaddressvalidator.cpp \
-  moc_gapcoinamountfield.cpp \
-  moc_gapcoingui.cpp \
-  moc_gapcoinunits.cpp \
+  moc_bitcoinaddressvalidator.cpp \
+  moc_bitcoinamountfield.cpp \
+  moc_bitcoingui.cpp \
+  moc_bitcoinunits.cpp \
   moc_clientmodel.cpp \
   moc_coincontroldialog.cpp \
   moc_coincontroltreewidget.cpp \
@@ -148,31 +148,31 @@ QT_MOC_CPP = \
   moc_walletmodel.cpp \
   moc_walletview.cpp
 
-GAPCOIN_MM = \
+BITCOIN_MM = \
   macdockiconhandler.mm \
   macnotificationhandler.mm
 
 QT_MOC = \
-  gapcoin.moc \
+  bitcoin.moc \
   intro.moc \
   overviewpage.moc \
   rpcconsole.moc
 
-QT_QRC_CPP = qrc_gapcoin.cpp
-QT_QRC = gapcoin.qrc
+QT_QRC_CPP = qrc_bitcoin.cpp
+QT_QRC = bitcoin.qrc
 
 PROTOBUF_CC = paymentrequest.pb.cc
 PROTOBUF_H = paymentrequest.pb.h
 PROTOBUF_PROTO = paymentrequest.proto
 
-GAPCOIN_QT_H = \
+BITCOIN_QT_H = \
   addressbookpage.h \
   addresstablemodel.h \
   askpassphrasedialog.h \
-  gapcoinaddressvalidator.h \
-  gapcoinamountfield.h \
-  gapcoingui.h \
-  gapcoinunits.h \
+  bitcoinaddressvalidator.h \
+  bitcoinamountfield.h \
+  bitcoingui.h \
+  bitcoinunits.h \
   clientmodel.h \
   coincontroldialog.h \
   coincontroltreewidget.h \
@@ -218,10 +218,10 @@ GAPCOIN_QT_H = \
 RES_ICONS = \
   res/icons/add.png \
   res/icons/address-book.png \
-  res/icons/gapcoin.ico \
-  res/icons/gapcoin.png \
-  res/icons/gapcoin_testnet.ico \
-  res/icons/gapcoin_testnet.png \
+  res/icons/bitcoin.ico \
+  res/icons/bitcoin.png \
+  res/icons/bitcoin_testnet.ico \
+  res/icons/bitcoin_testnet.png \
   res/icons/clock1.png \
   res/icons/clock2.png \
   res/icons/clock3.png \
@@ -260,12 +260,12 @@ RES_ICONS = \
   res/icons/tx_output.png \
   res/icons/tx_mined.png
 
-GAPCOIN_QT_CPP = \
-  gapcoin.cpp \
-  gapcoinaddressvalidator.cpp \
-  gapcoinamountfield.cpp \
-  gapcoingui.cpp \
-  gapcoinunits.cpp \
+BITCOIN_QT_CPP = \
+  bitcoin.cpp \
+  bitcoinaddressvalidator.cpp \
+  bitcoinamountfield.cpp \
+  bitcoingui.cpp \
+  bitcoinunits.cpp \
   clientmodel.cpp \
   csvmodelwriter.cpp \
   guiutil.cpp \
@@ -283,7 +283,7 @@ GAPCOIN_QT_CPP = \
   winshutdownmonitor.cpp
 
 if ENABLE_WALLET
-GAPCOIN_QT_CPP += \
+BITCOIN_QT_CPP += \
   addressbookpage.cpp \
   addresstablemodel.cpp \
   askpassphrasedialog.cpp \
@@ -319,38 +319,38 @@ RES_IMAGES = \
 
 RES_MOVIES = $(wildcard res/movies/spinner-*.png)
 
-GAPCOIN_RC = res/gapcoin-qt-res.rc
+BITCOIN_RC = res/bitcoin-qt-res.rc
 
-libgapcoinqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(QT_INCLUDES) \
+libbitcoinqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(QT_INCLUDES) \
   -I$(top_srcdir)/src/qt/forms $(QT_DBUS_INCLUDES)
-libgapcoinqt_a_SOURCES = $(GAPCOIN_QT_CPP) $(GAPCOIN_QT_H) $(QT_FORMS_UI) \
+libbitcoinqt_a_SOURCES = $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(QT_FORMS_UI) \
   $(QT_QRC) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_MOVIES)
 
-nodist_libgapcoinqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) $(PROTOBUF_CC) \
+nodist_libbitcoinqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) $(PROTOBUF_CC) \
   $(PROTOBUF_H) $(QT_QRC_CPP)
 
-BUILT_SOURCES = $(nodist_libgapcoinqt_a_SOURCES)
+BUILT_SOURCES = $(nodist_libbitcoinqt_a_SOURCES)
 
 #Generating these with a half-written protobuf header leads to wacky results.
 #This makes sure it's done.
 $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
-# gapcoin-qt binary #
+# bitcoin-qt binary #
 gapcoin_qt_CPPFLAGS = $(AM_CPPFLAGS) $(QT_INCLUDES) \
   -I$(top_srcdir)/src/qt/forms
-gapcoin_qt_SOURCES = gapcoin.cpp
+gapcoin_qt_SOURCES = bitcoin.cpp
 if TARGET_DARWIN
-  gapcoin_qt_SOURCES += $(GAPCOIN_MM)
+  gapcoin_qt_SOURCES += $(BITCOIN_MM)
 endif
 if TARGET_WINDOWS
-  gapcoin_qt_SOURCES += $(GAPCOIN_RC)
+  gapcoin_qt_SOURCES += $(BITCOIN_RC)
 endif
-gapcoin_qt_LDADD = libgapcoinqt.a $(LIBGAPCOIN_SERVER)
+gapcoin_qt_LDADD = libbitcoinqt.a $(LIBBITCOIN_SERVER)
 if ENABLE_WALLET
-gapcoin_qt_LDADD += $(LIBGAPCOIN_WALLET)
+gapcoin_qt_LDADD += $(LIBBITCOIN_WALLET)
 endif
-gapcoin_qt_LDADD += $(LIBGAPCOIN_CLI) $(LIBGAPCOIN_COMMON) $(LIBLEVELDB) $(LIBMEMENV) \
+gapcoin_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS)
 gapcoin_qt_LDFLAGS = $(QT_LDFLAGS)
 
@@ -363,15 +363,15 @@ QT_QM=$(QT_TS:.ts=.qm)
 .PHONY: FORCE
 .SECONDARY: $(QT_QM)
 
-gapcoinstrings.cpp: FORCE
-	$(MAKE) -C $(top_srcdir)/src qt/gapcoinstrings.cpp
+bitcoinstrings.cpp: FORCE
+	$(MAKE) -C $(top_srcdir)/src qt/bitcoinstrings.cpp
 
-translate: gapcoinstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(GAPCOIN_QT_CPP) $(GAPCOIN_QT_H) $(GAPCOIN_MM)
+translate: bitcoinstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
 	@QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts locale/gapcoin_en.ts
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_QM) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_MOVIES) $(PROTOBUF_H)
-	@cd $(abs_srcdir); test -f $(RCC) && QT_SELECT=$(QT_SELECT) $(RCC) -name gapcoin -o $(abs_builddir)/$@ $< || \
+	@cd $(abs_srcdir); test -f $(RCC) && QT_SELECT=$(QT_SELECT) $(RCC) -name bitcoin -o $(abs_builddir)/$@ $< || \
 	  echo error: could not build $@
 	$(SED) -e '/^\*\*.*Created:/d' $@ > $@.n && mv $@{.n,}
 	$(SED) -e '/^\*\*.*by:/d' $@  > $@.n && mv $@{.n,}

@@ -3,10 +3,10 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "gapcoin-config.h"
+#include "bitcoin-config.h"
 #endif
 
-#include "gapcoingui.h"
+#include "bitcoingui.h"
 
 #include "clientmodel.h"
 #include "guiconstants.h"
@@ -113,11 +113,11 @@ static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTrans
     if (qtTranslator.load("qt_" + lang_territory, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         QApplication::installTranslator(&qtTranslator);
 
-    // Load e.g. gapcoin_de.qm (shortcut "de" needs to be defined in gapcoin.qrc)
+    // Load e.g. gapcoin_de.qm (shortcut "de" needs to be defined in bitcoin.qrc)
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
-    // Load e.g. gapcoin_de_DE.qm (shortcut "de_DE" needs to be defined in gapcoin.qrc)
+    // Load e.g. gapcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
 }
@@ -141,11 +141,11 @@ void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, cons
 /** Class encapsulating Gapcoin Core startup and shutdown.
  * Allows running startup and shutdown in a different thread from the UI thread.
  */
-class GapcoinCore: public QObject
+class BitcoinCore: public QObject
 {
     Q_OBJECT
 public:
-    explicit GapcoinCore();
+    explicit BitcoinCore();
 
 public slots:
     void initialize();
@@ -164,12 +164,12 @@ private:
 };
 
 /** Main Gapcoin application object */
-class GapcoinApplication: public QApplication
+class BitcoinApplication: public QApplication
 {
     Q_OBJECT
 public:
-    explicit GapcoinApplication(int &argc, char **argv);
-    ~GapcoinApplication();
+    explicit BitcoinApplication(int &argc, char **argv);
+    ~BitcoinApplication();
 
 #ifdef ENABLE_WALLET
     /// Create payment server
@@ -190,7 +190,7 @@ public:
     /// Get process return value
     int getReturnValue() { return returnValue; }
 
-    /// Get window identifier of QMainWindow (GapcoinGUI)
+    /// Get window identifier of QMainWindow (BitcoinGUI)
     WId getMainWinId() const;
 
 public slots:
@@ -209,7 +209,7 @@ private:
     QThread *coreThread;
     OptionsModel *optionsModel;
     ClientModel *clientModel;
-    GapcoinGUI *window;
+    BitcoinGUI *window;
     QTimer *pollShutdownTimer;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
@@ -220,20 +220,20 @@ private:
     void startThread();
 };
 
-#include "gapcoin.moc"
+#include "bitcoin.moc"
 
-GapcoinCore::GapcoinCore():
+BitcoinCore::BitcoinCore():
     QObject()
 {
 }
 
-void GapcoinCore::handleRunawayException(std::exception *e)
+void BitcoinCore::handleRunawayException(std::exception *e)
 {
     PrintExceptionContinue(e, "Runaway exception");
     emit runawayException(QString::fromStdString(strMiscWarning));
 }
 
-void GapcoinCore::initialize()
+void BitcoinCore::initialize()
 {
     try
     {
@@ -254,7 +254,7 @@ void GapcoinCore::initialize()
     }
 }
 
-void GapcoinCore::shutdown()
+void BitcoinCore::shutdown()
 {
     try
     {
@@ -271,7 +271,7 @@ void GapcoinCore::shutdown()
     }
 }
 
-GapcoinApplication::GapcoinApplication(int &argc, char **argv):
+BitcoinApplication::BitcoinApplication(int &argc, char **argv):
     QApplication(argc, argv),
     coreThread(0),
     optionsModel(0),
@@ -288,7 +288,7 @@ GapcoinApplication::GapcoinApplication(int &argc, char **argv):
     startThread();
 }
 
-GapcoinApplication::~GapcoinApplication()
+BitcoinApplication::~BitcoinApplication()
 {
     LogPrintf("Stopping thread\n");
     emit stopThread();
@@ -306,27 +306,27 @@ GapcoinApplication::~GapcoinApplication()
 }
 
 #ifdef ENABLE_WALLET
-void GapcoinApplication::createPaymentServer()
+void BitcoinApplication::createPaymentServer()
 {
     paymentServer = new PaymentServer(this);
 }
 #endif
 
-void GapcoinApplication::createOptionsModel()
+void BitcoinApplication::createOptionsModel()
 {
     optionsModel = new OptionsModel();
 }
 
-void GapcoinApplication::createWindow(bool isaTestNet)
+void BitcoinApplication::createWindow(bool isaTestNet)
 {
-    window = new GapcoinGUI(isaTestNet, 0);
+    window = new BitcoinGUI(isaTestNet, 0);
 
     pollShutdownTimer = new QTimer(window);
     connect(pollShutdownTimer, SIGNAL(timeout()), window, SLOT(detectShutdown()));
     pollShutdownTimer->start(200);
 }
 
-void GapcoinApplication::createSplashScreen(bool isaTestNet)
+void BitcoinApplication::createSplashScreen(bool isaTestNet)
 {
     SplashScreen *splash = new SplashScreen(QPixmap(), 0, isaTestNet);
     splash->setAttribute(Qt::WA_DeleteOnClose);
@@ -334,10 +334,10 @@ void GapcoinApplication::createSplashScreen(bool isaTestNet)
     connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
 }
 
-void GapcoinApplication::startThread()
+void BitcoinApplication::startThread()
 {
     coreThread = new QThread(this);
-    GapcoinCore *executor = new GapcoinCore();
+    BitcoinCore *executor = new BitcoinCore();
     executor->moveToThread(coreThread);
 
     /*  communication to and from thread */
@@ -353,13 +353,13 @@ void GapcoinApplication::startThread()
     coreThread->start();
 }
 
-void GapcoinApplication::requestInitialize()
+void BitcoinApplication::requestInitialize()
 {
     LogPrintf("Requesting initialize\n");
     emit requestedInitialize();
 }
 
-void GapcoinApplication::requestShutdown()
+void BitcoinApplication::requestShutdown()
 {
     LogPrintf("Requesting shutdown\n");
     window->hide();
@@ -381,7 +381,7 @@ void GapcoinApplication::requestShutdown()
     emit requestedShutdown();
 }
 
-void GapcoinApplication::initializeResult(int retval)
+void BitcoinApplication::initializeResult(int retval)
 {
     LogPrintf("Initialization result: %i\n", retval);
     // Set exit result: 0 if successful, 1 if failure
@@ -436,19 +436,19 @@ void GapcoinApplication::initializeResult(int retval)
     }
 }
 
-void GapcoinApplication::shutdownResult(int retval)
+void BitcoinApplication::shutdownResult(int retval)
 {
     LogPrintf("Shutdown result: %i\n", retval);
     quit(); // Exit main loop after shutdown finished
 }
 
-void GapcoinApplication::handleRunawayException(const QString &message)
+void BitcoinApplication::handleRunawayException(const QString &message)
 {
-    QMessageBox::critical(0, "Runaway exception", GapcoinGUI::tr("A fatal error occurred. Gapcoin can no longer continue safely and will quit.") + QString("\n\n") + message);
+    QMessageBox::critical(0, "Runaway exception", BitcoinGUI::tr("A fatal error occurred. Gapcoin can no longer continue safely and will quit.") + QString("\n\n") + message);
     ::exit(1);
 }
 
-WId GapcoinApplication::getMainWinId() const
+WId BitcoinApplication::getMainWinId() const
 {
     if (!window)
         return 0;
@@ -456,7 +456,7 @@ WId GapcoinApplication::getMainWinId() const
     return window->winId();
 }
 
-#ifndef GAPCOIN_QT_TEST
+#ifndef BITCOIN_QT_TEST
 int main(int argc, char *argv[])
 {
     SetupEnvironment();
@@ -474,8 +474,8 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForCStrings(QTextCodec::codecForTr());
 #endif
 
-    Q_INIT_RESOURCE(gapcoin);
-    GapcoinApplication app(argc, argv);
+    Q_INIT_RESOURCE(bitcoin);
+    BitcoinApplication app(argc, argv);
 #if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -611,4 +611,4 @@ int main(int argc, char *argv[])
     }
     return app.getReturnValue();
 }
-#endif // GAPCOIN_QT_TEST
+#endif // BITCOIN_QT_TEST

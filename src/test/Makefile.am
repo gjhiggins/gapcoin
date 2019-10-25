@@ -22,12 +22,12 @@ RAW_TEST_FILES = data/alertTests.raw
 
 BUILT_SOURCES = $(JSON_TEST_FILES:.json=.json.h) $(RAW_TEST_FILES:.raw=.raw.h)
 
-# test_gapcoin binary #
+# test_bitcoin binary #
 test_gapcoin_CPPFLAGS = $(AM_CPPFLAGS) $(TESTDEFS)
-test_gapcoin_LDADD = $(LIBGAPCOIN_SERVER) $(LIBGAPCOIN_CLI) $(LIBGAPCOIN_COMMON) $(LIBLEVELDB) $(LIBMEMENV) \
+test_gapcoin_LDADD = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
 if ENABLE_WALLET
-test_gapcoin_LDADD += $(LIBGAPCOIN_WALLET)
+test_gapcoin_LDADD += $(LIBBITCOIN_WALLET)
 endif
 test_gapcoin_LDADD += $(BDB_LIBS)
 
@@ -38,12 +38,10 @@ test_gapcoin_SOURCES = \
   base58_tests.cpp \
   base64_tests.cpp \
   bignum_tests.cpp \
-  bloom_tests.cpp \
   canonical_tests.cpp \
   checkblock_tests.cpp \
   Checkpoints_tests.cpp \
   compress_tests.cpp \
-  DoS_tests.cpp \
   getarg_tests.cpp \
   key_tests.cpp \
   main_tests.cpp \
@@ -57,7 +55,7 @@ test_gapcoin_SOURCES = \
   script_tests.cpp \
   serialize_tests.cpp \
   sigopcount_tests.cpp \
-  test_gapcoin.cpp \
+  test_bitcoin.cpp \
   transaction_tests.cpp \
   uint256_tests.cpp \
   util_tests.cpp \

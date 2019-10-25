@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GAPCOIN_MRUSET_H
-#define GAPCOIN_MRUSET_H
+#ifndef BITCOIN_MRUSET_H
+#define BITCOIN_MRUSET_H
 
 #include <deque>
 #include <set>

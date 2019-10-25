@@ -13,7 +13,7 @@ namespace Ui {
     class RPCConsole;
 }
 
-/** Local Gapcoin RPC console. */
+/** Local Bitcoin RPC console. */
 class RPCConsole: public QDialog
 {
     Q_OBJECT
