@@ -1,11 +1,13 @@
 *.tar.gz
 
 *.exe
-src/bitcoin
-src/bitcoind
-src/bitcoin-cli
-src/test/test_bitcoin
-src/qt/test/test_bitcoin-qt
+src/gapcoin
+src/gapcoind
+src/gapcoin-cli
+src/test/test_gapcoin
+src/qt/test/test_gapcoin-qt
+
+src/PoWCore/src/
 
 Makefile.in
 aclocal.m4
@@ -40,29 +42,31 @@ src/qt/test/moc*.cpp
 *.a
 *.pb.cc
 *.pb.h
-
+*.Po
 *.log
 *.trs
 *.dmg
 
 *.json.h
 *.raw.h
+*.pyc
 
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-bitcoin-qt
-Bitcoin-Qt.app
+gapcoin-qt
+Gapcoin-Qt.app
 
 # Unit-tests
 Makefile.test
-bitcoin-qt_test
+gapcoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
 
 # Qt creator
 *.pro.user
+*.am.user
 
 # Mac specific
 .DS_Store
@@ -71,7 +75,7 @@ build
 #lcov
 *.gcno
 /*.info
-test_bitcoin.coverage/
+test_gapcoin.coverage/
 total.coverage/
 coverage_percent.txt
 
