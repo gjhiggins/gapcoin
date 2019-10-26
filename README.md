@@ -4,7 +4,7 @@ Gapcoin Core integration/staging tree
 http://www.gapcoin.org
 
 Copyright (c) 2009-2014 Bitcoin Core Developers
-<br>
+
 Copyright (c) 2014-2015 Gapcoin Core Developers
 
 What is Gapcoin?
