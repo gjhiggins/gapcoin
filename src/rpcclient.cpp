@@ -5,6 +5,7 @@
 
 #include "rpcclient.h"
 
+#include "rpcprotocol.h"
 #include "util.h"
 #include "ui_interface.h"
 #include "chainparams.h" // for Params().RPCPort()
@@ -21,7 +22,6 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/shared_ptr.hpp>
 #include "json/json_spirit_writer_template.h"
-#include "rpcprotocol.h"
 
 using namespace std;
 using namespace boost;
@@ -40,7 +40,7 @@ Object CallRPC(const string& strMethod, const Array& params)
     bool fUseSSL = GetBoolArg("-rpcssl", false);
     asio::io_service io_service;
     ssl::context context(ssl::context::sslv23);
-    context.set_options(ssl::context::no_sslv2);
+    context.set_options(ssl::context::no_sslv2 | ssl::context::no_sslv3);
     asio::ssl::stream<asio::ip::tcp::socket> sslStream(io_service, context);
     SSLIOStreamDevice<asio::ip::tcp> d(sslStream, fUseSSL);
     iostreams::stream< SSLIOStreamDevice<asio::ip::tcp> > stream(d);
