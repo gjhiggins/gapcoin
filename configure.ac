@@ -325,7 +325,10 @@ if test x$use_glibc_compat != xno; then
   #__fdelt_chk's params and return type have changed from long unsigned int to long int.
   # See which one is present here.
   AC_MSG_CHECKING(__fdelt_chk type)
-  AC_TRY_COMPILE([#define __USE_FORTIFY_LEVEL 2
+  AC_TRY_COMPILE([#ifdef _FORTIFY_SOURCE
+                    #undef _FORTIFY_SOURCE
+                  #endif
+                  #define _FORTIFY_SOURCE 2
                   #include <sys/select.h>
      extern "C" long unsigned int __fdelt_warn(long unsigned int);],[],
     [ fdelt_type="long unsigned int"],
@@ -494,7 +497,7 @@ CPPFLAGS="$TEMP_CPPFLAGS"
 fi
 
 if test x$boost_sleep != xyes; then
-  AC_MSG_ERROR(No working boost sleep implementation found. If on ubuntu 13.10 with libboost1.54-all-dev remove libboost.1.54-all-dev and use libboost1.53-all-dev)
+  AC_MSG_ERROR(No working boost sleep implementation found.)
 fi
 
 AC_ARG_WITH([cli],

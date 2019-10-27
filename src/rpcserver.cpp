@@ -113,7 +113,6 @@ std::string HexBits(uint64_t nDifficulty)
 
     return HexStr(BEGIN(uDifficulty.cDifficulty), END(uDifficulty.cDifficulty));
 }
-      
 
 uint256 ParseHashV(const Value& v, string strName)
 {
