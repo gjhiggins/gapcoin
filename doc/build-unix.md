@@ -73,6 +73,14 @@ for Ubuntu 13.10:
 	libboost1.54 will not work,
 	remove libboost1.54-all-dev and install libboost1.53-all-dev instead.
 
+for Ubuntu 16.04:
+
+Changes to Qt and the Boost library require the appication of two patches 
+
+        patch -P 1 < ./contrib/boost-rpcrawtransaction.patch 
+        patch -P 1 < ./contrib/configure-dot-ac-qt-pic.patch
+
+
 for Debian 7 (Wheezy) and later:
  The oldstable repository contains db4.8 packages.
  Add the following line to /etc/apt/sources.list,

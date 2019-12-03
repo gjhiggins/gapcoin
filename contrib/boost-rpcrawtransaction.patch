@@ -1,0 +1,13 @@
+diff --git a/src/rpcrawtransaction.cpp b/src/rpcrawtransaction.cpp
+index 5f89d7e..8ed2302 100644
+--- a/src/rpcrawtransaction.cpp
++++ b/src/rpcrawtransaction.cpp
+@@ -296,7 +296,7 @@ Value listunspent(const Array& params, bool fHelp)
+             CTxDestination address;
+             if (ExtractDestination(pk, address))
+             {
+-                const CScriptID& hash = boost::get<const CScriptID&>(address);
++                const CScriptID& hash = boost::get<CScriptID>(address);
+                 CScript redeemScript;
+                 if (pwalletMain->GetCScript(hash, redeemScript))
+                     entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
