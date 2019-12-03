@@ -442,8 +442,8 @@ private:
 void ServiceConnection(AcceptedConnection *conn);
 
 // Forward declaration required for RPCListen
-template <typename Protocol, typename SocketAcceptorService>
-static void RPCAcceptHandler(boost::shared_ptr< basic_socket_acceptor<Protocol, SocketAcceptorService> > acceptor,
+template <typename Protocol>
+static void RPCAcceptHandler(boost::shared_ptr< basic_socket_acceptor<Protocol> > acceptor,
                              ssl::context& context,
                              bool fUseSSL,
                              boost::shared_ptr< AcceptedConnection > conn,
@@ -452,8 +452,8 @@ static void RPCAcceptHandler(boost::shared_ptr< basic_socket_acceptor<Protocol, 
 /**
  * Sets up I/O resources to accept and handle a new connection.
  */
-template <typename Protocol, typename SocketAcceptorService>
-static void RPCListen(boost::shared_ptr< basic_socket_acceptor<Protocol, SocketAcceptorService> > acceptor,
+template <typename Protocol>
+static void RPCListen(boost::shared_ptr< basic_socket_acceptor<Protocol> > acceptor,
                    ssl::context& context,
                    const bool fUseSSL)
 {
@@ -463,7 +463,7 @@ static void RPCListen(boost::shared_ptr< basic_socket_acceptor<Protocol, SocketA
     acceptor->async_accept(
             conn->sslStream.lowest_layer(),
             conn->peer,
-            boost::bind(&RPCAcceptHandler<Protocol, SocketAcceptorService>,
+            boost::bind(&RPCAcceptHandler<Protocol>,
                 acceptor,
                 boost::ref(context),
                 fUseSSL,
@@ -475,8 +475,8 @@ static void RPCListen(boost::shared_ptr< basic_socket_acceptor<Protocol, SocketA
 /**
  * Accept and handle incoming connection.
  */
-template <typename Protocol, typename SocketAcceptorService>
-static void RPCAcceptHandler(boost::shared_ptr< basic_socket_acceptor<Protocol, SocketAcceptorService> > acceptor,
+template <typename Protocol>
+static void RPCAcceptHandler(boost::shared_ptr< basic_socket_acceptor<Protocol> > acceptor,
                              ssl::context& context,
                              const bool fUseSSL,
                              boost::shared_ptr< AcceptedConnection > conn,
@@ -549,7 +549,7 @@ void StartRPCThreads()
 
     if (fUseSSL)
     {
-        rpc_ssl_context->set_options(ssl::context::no_sslv2 | ssl::context::no_sslv3);
+        rpc_ssl_context->set_options(ssl::context::no_sslv2);
 
         filesystem::path pathCertFile(GetArg("-rpcsslcertificatechainfile", "server.cert"));
         if (!pathCertFile.is_complete()) pathCertFile = filesystem::path(GetDataDir()) / pathCertFile;
@@ -649,11 +649,20 @@ void StopRPCThreads()
     // First, cancel all timers and acceptors
     // This is not done automatically by ->stop(), and in some cases the destructor of
     // asio::io_service can hang if this is skipped.
+    boost::system::error_code ec;
     BOOST_FOREACH(const boost::shared_ptr<ip::tcp::acceptor> &acceptor, rpc_acceptors)
-        acceptor->cancel();
+    {
+        acceptor->cancel(ec);
+        if (ec)
+            LogPrintf("%s: Warning: %s when cancelling acceptor", __func__, ec.message());
+    }
     rpc_acceptors.clear();
     BOOST_FOREACH(const PAIRTYPE(std::string, boost::shared_ptr<deadline_timer>) &timer, deadlineTimers)
-        timer.second->cancel();
+    {
+        timer.second->cancel(ec);
+        if (ec)
+            LogPrintf("%s: Warning: %s when cancelling timer", __func__, ec.message());
+    }
     deadlineTimers.clear();
 
     rpc_io_service->stop();
