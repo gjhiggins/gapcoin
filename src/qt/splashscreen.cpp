@@ -4,16 +4,17 @@
 
 #include "splashscreen.h"
 
-#include "clientversion.h"
-#include "init.h"
-#include "ui_interface.h"
-#include "util.h"
+#include "../clientversion.h"
+#include "../init.h"
+// #include "ui_interface.h"
+#include "../util.h"
 #ifdef ENABLE_WALLET
-#include "wallet.h"
+#include "../wallet.h"
 #endif
 
 #include <QApplication>
 #include <QPainter>
+
 
 SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f, bool isTestNet) :
     QSplashScreen(pixmap, f)
@@ -23,8 +24,8 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f, bool isTest
     // set reference point, paddings
     int paddingRight            = 50;
     int paddingTop              = 50;
-    int titleVersionVSpace      = 17;
-    int titleCopyrightVSpace    = 40;
+    int titleVersionVSpace      = 36;
+    int titleCopyrightVSpace    = 64;
 
     float fontFactor            = 1.0;
 
@@ -32,7 +33,7 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f, bool isTest
     QString titleText       = tr("Gapcoin Core");
     QString versionText     = QString("Version %1").arg(QString::fromStdString(FormatFullVersion()));
     QString copyrightText   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin Core developers"));
-    QString copyrightText2  = QChar(0xA9)+QString(" 2014-2015 ") + QString(tr("The Gapcoin Core developers"));
+    QString copyrightText2  = QChar(0xA9)+QString(" 2014-2019 ") + QString(tr("The Gapcoin Core developers"));
     QString testnetAddText  = QString(tr("[testnet]")); // define text to place as single text object
 
     QString font            = "Arial";
@@ -47,7 +48,7 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f, bool isTest
     }
 
     QPainter pixPaint(&newPixmap);
-    pixPaint.setPen(QColor(100,100,100));
+    pixPaint.setPen(QColor(140,140,140));
 
     // check font size and drawing with
     pixPaint.setFont(QFont(font, 33*fontFactor));
@@ -77,7 +78,7 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f, bool isTest
     // draw copyright stuff
     pixPaint.setFont(QFont(font, 10*fontFactor));
     pixPaint.drawText(newPixmap.width()-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace,copyrightText);
-    pixPaint.drawText(newPixmap.width()-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+10,copyrightText2);
+    pixPaint.drawText(newPixmap.width()-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+20,copyrightText2);
 
     // draw testnet string if testnet is on
     if(isTestNet) {
@@ -112,7 +113,7 @@ static void InitMessage(SplashScreen *splash, const std::string &message)
         Qt::QueuedConnection,
         Q_ARG(QString, QString::fromStdString(message)),
         Q_ARG(int, Qt::AlignBottom|Qt::AlignHCenter),
-        Q_ARG(QColor, QColor(55,55,55)));
+        Q_ARG(QColor, QColor(95,95,95)));
 }
 
 static void ShowProgress(SplashScreen *splash, const std::string &title, int nProgress)

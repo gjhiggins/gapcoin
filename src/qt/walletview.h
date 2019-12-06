@@ -15,6 +15,9 @@ class SendCoinsDialog;
 class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
+class BlockExplorer;
+class MiningPage;
+// class NewsPage;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -53,6 +56,9 @@ public:
 private:
     ClientModel *clientModel;
     WalletModel *walletModel;
+    BlockExplorer *explorerWindow;
+    MiningPage *miningPage;
+    // NewsPage *newsPage;
 
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
@@ -68,6 +74,12 @@ public slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to explorer page */
+    void gotoBlockExplorerPage();	
+    /** Switch to mining page */
+    void gotoMiningPage();	
+    /** Switch to news page */
+    // void gotoNewsPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
@@ -102,6 +114,9 @@ public slots:
 
     /** Show progress dialog e.g. for rescan */
     void showProgress(const QString &title, int nProgress);
+
+    /** Update the plot on the overview (home) page */
+    void updatePlot(int count);
 
 signals:
     /** Signal that we want to show the main window */

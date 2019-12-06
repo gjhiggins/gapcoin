@@ -20,6 +20,10 @@ class SendCoinsRecipient;
 class WalletFrame;
 class WalletModel;
 
+class BlockExplorer;
+class MiningPage;
+// class NewsPage;
+
 class CWallet;
 
 QT_BEGIN_NAMESPACE
@@ -55,6 +59,17 @@ public:
     bool addWallet(const QString& name, WalletModel *walletModel);
     bool setCurrentWallet(const QString& name);
     void removeAllWallets();
+
+    /** Used by WalletView to allow access to needed QActions */
+    // Todo: Use Qt signals for these
+    // QAction * getOverviewAction() { return overviewAction; }
+    // QAction * getHistoryAction() { return historyAction; }
+    // QAction * getReceiveCoinsAction() { return receiveCoinsAction; }
+    // QAction * getSendCoinsAction() { return sendCoinsAction; }
+    // QAction * getMiningAction() { return miningAction; }
+
+	// void timerEvent(QTimerEvent *event);
+	// void resizeEvent(QResizeEvent *event);
 #endif
 
 protected:
@@ -71,10 +86,13 @@ private:
     QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
+    QLabel *labelMiningIcon;
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
+	QAction *exploreAction;
+    QAction *newsAction;
     QAction *overviewAction;
     QAction *historyAction;
     QAction *quitAction;
@@ -93,12 +111,14 @@ private:
     QAction *aboutQtAction;
     QAction *openRPCConsoleAction;
     QAction *openAction;
+	QAction *openBlockExplorerAction;
+    QAction *miningAction;
     QAction *showHelpMessageAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
     RPCConsole *rpcConsole;
-
+    BlockExplorer  *explorerWindow;
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
     int spinnerFrame;
@@ -152,6 +172,10 @@ public slots:
 
     /** Show incoming transaction notification for new transactions. */
     void incomingTransaction(const QString& date, int unit, qint64 amount, const QString& type, const QString& address);
+
+    /** Set mining status and hashrate in the UI */
+    void setMining(bool mining, int hashrate);
+
 #endif
 
 private slots:
@@ -160,6 +184,12 @@ private slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to Explorer Page */
+    void gotoBlockExplorerPage(); 
+    /** Switch to Mining Page */
+    void gotoMiningPage();
+    /** Switch to news page */
+    // void gotoNewsPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

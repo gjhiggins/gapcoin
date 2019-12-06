@@ -119,6 +119,27 @@ void WalletFrame::gotoHistoryPage()
         i.value()->gotoHistoryPage();
 }
 
+void WalletFrame::gotoBlockExplorerPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoBlockExplorerPage();
+}
+
+void WalletFrame::gotoMiningPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoMiningPage();
+}
+
+// void WalletFrame::gotoNewsPage()
+// {
+//     QMap<QString, WalletView*>::const_iterator i;
+//     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+//         i.value()->gotoNewsPage();
+// }
+
 void WalletFrame::gotoReceiveCoinsPage()
 {
     QMap<QString, WalletView*>::const_iterator i;
@@ -173,6 +194,13 @@ void WalletFrame::unlockWallet()
     WalletView *walletView = currentWalletView();
     if (walletView)
         walletView->unlockWallet();
+}
+
+void WalletFrame::updatePlot(int count)
+{
+    WalletView *walletView = currentWalletView();
+    if (walletView)
+    	walletView->updatePlot(count);
 }
 
 void WalletFrame::usedSendingAddresses()

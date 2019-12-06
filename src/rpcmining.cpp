@@ -54,6 +54,12 @@ void ShutdownRPCMining()
 // Return average network primes per second based on the last 'lookup' blocks,
 // or from the last difficulty change if 'lookup' is nonpositive.
 // If 'height' is nonnegative, compute the estimate at the time when a given block was found.
+
+// int64_t GetNetworkPrimesPS(int lookup, int height) {
+//     return GetNetworkHashPS(int lookup, int height);    
+// }
+
+
 Value GetNetworkHashPS(int lookup, int height) {
     CBlockIndex *pb = chainActive.Tip();
 

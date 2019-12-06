@@ -13,6 +13,9 @@ class ClientModel;
 class SendCoinsRecipient;
 class WalletModel;
 class WalletView;
+class BlockExplorer;
+class MiningPage;
+// class NewsPage;
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -52,6 +55,12 @@ public slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+	/** Switch to explorer page */
+    void gotoBlockExplorerPage();	
+	/** Switch to mining page */
+    void gotoMiningPage();	
+    /** Switch to news page */
+    // void gotoNewsPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
@@ -75,6 +84,8 @@ public slots:
     void usedSendingAddresses();
     /** Show used receiving addresses */
     void usedReceivingAddresses();
+    /** Update the plot on the overview (home) page */
+    void updatePlot(int count);
 };
 
 #endif // WALLETFRAME_H

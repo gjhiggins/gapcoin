@@ -112,6 +112,7 @@ static const uint64_t nMinDiskSpace = 52428800;
 
 class CCoinsDB;
 class CBlockTreeDB;
+class CAddressDB;
 struct CDiskBlockPos;
 class CTxUndo;
 class CScriptCheck;
@@ -1095,6 +1096,9 @@ extern CCoinsViewCache *pcoinsTip;
 
 /** Global variable that points to the active block tree (protected by cs_main) */
 extern CBlockTreeDB *pblocktree;
+
+/** Global variable that points to the address database (protected by cs_main) */
+extern CAddressDB *paddressmap;
 
 struct CBlockTemplate
 {

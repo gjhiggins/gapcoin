@@ -7,8 +7,11 @@
 #include "addressbookpage.h"
 #include "askpassphrasedialog.h"
 #include "bitcoingui.h"
+#include "blockexplorer.h"
 #include "clientmodel.h"
 #include "guiutil.h"
+#include "miningpage.h"
+// #include "newspage.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
 #include "receivecoinsdialog.h"
@@ -35,6 +38,9 @@ WalletView::WalletView(QWidget *parent):
 {
     // Create tabs
     overviewPage = new OverviewPage();
+	explorerWindow = new BlockExplorer(this);
+    miningPage = new MiningPage(this);
+    // newsPage = new NewsPage(this);
 
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -54,10 +60,14 @@ WalletView::WalletView(QWidget *parent):
     receiveCoinsPage = new ReceiveCoinsDialog();
     sendCoinsPage = new SendCoinsDialog();
 
+
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
+	addWidget(explorerWindow);
+    addWidget(miningPage);
+    // addWidget(newsPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -101,22 +111,24 @@ void WalletView::setClientModel(ClientModel *clientModel)
     this->clientModel = clientModel;
 
     overviewPage->setClientModel(clientModel);
+    miningPage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
 {
     this->walletModel = walletModel;
 
-    // Put transaction list in tabs
-    transactionView->setModel(walletModel);
-    overviewPage->setWalletModel(walletModel);
-    receiveCoinsPage->setModel(walletModel);
-    sendCoinsPage->setModel(walletModel);
-
     if (walletModel)
     {
         // Receive and pass through messages from wallet model
         connect(walletModel, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
+
+        // Put transaction list in tabs
+        transactionView->setModel(walletModel);
+        overviewPage->setWalletModel(walletModel);
+        receiveCoinsPage->setModel(walletModel);
+        sendCoinsPage->setModel(walletModel);
+        miningPage->setModel(walletModel);
 
         // Handle changes in encryption status
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SIGNAL(encryptionStatusChanged(int)));
@@ -172,6 +184,21 @@ void WalletView::gotoSendCoinsPage(QString addr)
     if (!addr.isEmpty())
         sendCoinsPage->setAddress(addr);
 }
+
+void WalletView::gotoBlockExplorerPage()
+{
+    setCurrentWidget(explorerWindow);
+}
+
+void WalletView::gotoMiningPage()
+{
+    setCurrentWidget(miningPage);
+}
+
+//void WalletView::gotoNewsPage()
+//{
+//    setCurrentWidget(newsPage);
+//}
 
 void WalletView::gotoSignMessageTab(QString addr)
 {
@@ -270,6 +297,14 @@ void WalletView::usedSendingAddresses()
     dlg->setAttribute(Qt::WA_DeleteOnClose);
     dlg->setModel(walletModel->getAddressTableModel());
     dlg->show();
+}
+
+void WalletView::updatePlot(int count)
+{
+    if(!walletModel)
+        return;
+    miningPage->updatePlot(count);
+    overviewPage->updatePlot(count);
 }
 
 void WalletView::usedReceivingAddresses()

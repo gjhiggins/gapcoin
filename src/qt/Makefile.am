@@ -88,10 +88,12 @@ QT_FORMS_UI = \
   forms/aboutdialog.ui \
   forms/addressbookpage.ui \
   forms/askpassphrasedialog.ui \
+  forms/blockexplorer.ui \
   forms/coincontroldialog.ui \
   forms/editaddressdialog.ui \
   forms/helpmessagedialog.ui \
   forms/intro.ui \
+  forms/miningpage.ui \
   forms/openuridialog.ui \
   forms/optionsdialog.ui \
   forms/overviewpage.ui \
@@ -111,6 +113,7 @@ QT_MOC_CPP = \
   moc_bitcoinamountfield.cpp \
   moc_bitcoingui.cpp \
   moc_bitcoinunits.cpp \
+  moc_blockexplorer.cpp \
   moc_clientmodel.cpp \
   moc_coincontroldialog.cpp \
   moc_coincontroltreewidget.cpp \
@@ -120,6 +123,7 @@ QT_MOC_CPP = \
   moc_intro.cpp \
   moc_macdockiconhandler.cpp \
   moc_macnotificationhandler.cpp \
+  moc_miningpage.cpp \
   moc_monitoreddatamapper.cpp \
   moc_notificator.cpp \
   moc_openuridialog.cpp \
@@ -127,6 +131,7 @@ QT_MOC_CPP = \
   moc_optionsmodel.cpp \
   moc_overviewpage.cpp \
   moc_paymentserver.cpp \
+  moc_qcustomplot.cpp \
   moc_qvalidatedlineedit.cpp \
   moc_qvaluecombobox.cpp \
   moc_receivecoinsdialog.cpp \
@@ -173,6 +178,7 @@ BITCOIN_QT_H = \
   bitcoinamountfield.h \
   bitcoingui.h \
   bitcoinunits.h \
+  blockexplorer.h \
   clientmodel.h \
   coincontroldialog.h \
   coincontroltreewidget.h \
@@ -183,6 +189,7 @@ BITCOIN_QT_H = \
   intro.h \
   macdockiconhandler.h \
   macnotificationhandler.h \
+  miningpage.h \
   monitoreddatamapper.h \
   notificator.h \
   openuridialog.h \
@@ -191,6 +198,7 @@ BITCOIN_QT_H = \
   overviewpage.h \
   paymentrequestplus.h \
   paymentserver.h \
+  qcustomplot.h \
   qvalidatedlineedit.h \
   qvaluecombobox.h \
   receivecoinsdialog.h \
@@ -217,6 +225,7 @@ BITCOIN_QT_H = \
 
 RES_ICONS = \
   res/icons/add.png \
+  res/icons/about.png \
   res/icons/address-book.png \
   res/icons/bitcoin.ico \
   res/icons/bitcoin.png \
@@ -237,13 +246,18 @@ RES_ICONS = \
   res/icons/edit.png \
   res/icons/editcopy.png \
   res/icons/editpaste.png \
+  res/icons/explorer.png \
   res/icons/export.png \
   res/icons/filesave.png \
   res/icons/history.png \
   res/icons/key.png \
   res/icons/lock_closed.png \
   res/icons/lock_open.png \
+  res/icons/mining.png \
+  res/icons/mining_active.png \
+  res/icons/mining_inactive.png \
   res/icons/overview.png \
+  res/icons/news.png \
   res/icons/qrcode.png \
   res/icons/quit.png \
   res/icons/receive.png \
@@ -266,14 +280,17 @@ BITCOIN_QT_CPP = \
   bitcoinamountfield.cpp \
   bitcoingui.cpp \
   bitcoinunits.cpp \
+  blockexplorer.cpp \
   clientmodel.cpp \
   csvmodelwriter.cpp \
   guiutil.cpp \
   intro.cpp \
+  miningpage.cpp \
   monitoreddatamapper.cpp \
   notificator.cpp \
   optionsdialog.cpp \
   optionsmodel.cpp \
+  qcustomplot.cpp \
   qvalidatedlineedit.cpp \
   qvaluecombobox.cpp \
   rpcconsole.cpp \
@@ -287,13 +304,16 @@ BITCOIN_QT_CPP += \
   addressbookpage.cpp \
   addresstablemodel.cpp \
   askpassphrasedialog.cpp \
+  blockexplorer.cpp \
   coincontroldialog.cpp \
   coincontroltreewidget.cpp \
   editaddressdialog.cpp \
+  miningpage.cpp \
   openuridialog.cpp \
   overviewpage.cpp \
   paymentrequestplus.cpp \
   paymentserver.cpp \
+  qcustomplot.cpp \
   receivecoinsdialog.cpp \
   receiverequestdialog.cpp \
   recentrequeststablemodel.cpp \
