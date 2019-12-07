@@ -70,8 +70,6 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     EC_POINT *Q = NULL;
     BIGNUM *rr = NULL;
     BIGNUM *zero = NULL;
-    const BIGNUM *ecsig_r = NULL;
-    const BIGNUM *ecsig_s = NULL;
     int n = 0;
     int i = recid / 2;
 
@@ -83,10 +81,7 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     x = BN_CTX_get(ctx);
     if (!BN_copy(x, order)) { ret=-1; goto err; }
     if (!BN_mul_word(x, i)) { ret=-1; goto err; }
-    
-    ECDSA_SIG_get0(ecsig, &ecsig_r, &ecsig_s);
-
-    if (!BN_add(x, x, ecsig_r)) { ret=-1; goto err; }
+    if (!BN_add(x, x, ecsig->r)) { ret=-1; goto err; }
     field = BN_CTX_get(ctx);
     if (!EC_GROUP_get_curve_GFp(group, field, NULL, NULL, ctx)) { ret=-2; goto err; }
     if (BN_cmp(x, field) >= 0) { ret=0; goto err; }
@@ -107,9 +102,9 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     if (!BN_zero(zero)) { ret=-1; goto err; }
     if (!BN_mod_sub(e, zero, e, order, ctx)) { ret=-1; goto err; }
     rr = BN_CTX_get(ctx);
-    if (!BN_mod_inverse(rr, ecsig_r, order, ctx)) { ret=-1; goto err; }
+    if (!BN_mod_inverse(rr, ecsig->r, order, ctx)) { ret=-1; goto err; }
     sor = BN_CTX_get(ctx);
-    if (!BN_mod_mul(sor, ecsig_s, rr, order, ctx)) { ret=-1; goto err; }
+    if (!BN_mod_mul(sor, ecsig->s, rr, order, ctx)) { ret=-1; goto err; }
     eor = BN_CTX_get(ctx);
     if (!BN_mod_mul(eor, e, rr, order, ctx)) { ret=-1; goto err; }
     if (!EC_POINT_mul(group, Q, eor, R, sor, ctx)) { ret=-2; goto err; }
@@ -153,11 +148,14 @@ public:
     }
 
     void SetSecretBytes(const unsigned char vch[32]) {
-        BIGNUM *bn = BN_new();
-
-        assert(BN_bin2bn(vch, 32, bn));
-        assert(EC_KEY_regenerate_key(pkey, bn));
-        BN_free(bn);
+        bool ret;
+        BIGNUM bn;
+        BN_init(&bn);
+        ret = BN_bin2bn(vch, 32, &bn);
+        assert(ret);
+        ret = EC_KEY_regenerate_key(pkey, &bn);
+        assert(ret);
+        BN_clear_free(&bn);
     }
 
     void GetPrivKey(CPrivKey &privkey, bool fCompressed) {
@@ -202,42 +200,37 @@ public:
     }
 
     bool Sign(const uint256 &hash, std::vector<unsigned char>& vchSig) {
+        vchSig.clear();
+        ECDSA_SIG *sig = ECDSA_do_sign((unsigned char*)&hash, sizeof(hash), pkey);
+        if (sig == NULL)
+            return false;
+        BN_CTX *ctx = BN_CTX_new();
+        BN_CTX_start(ctx);
+        const EC_GROUP *group = EC_KEY_get0_group(pkey);
+        BIGNUM *order = BN_CTX_get(ctx);
+        BIGNUM *halforder = BN_CTX_get(ctx);
+        EC_GROUP_get_order(group, order, ctx);
+        BN_rshift1(halforder, order);
+        if (BN_cmp(sig->s, halforder) > 0) {
+            // enforce low S values, by negating the value (modulo the order) if above order/2.
+            BN_sub(sig->s, order, sig->s);
+        }
+        BN_CTX_end(ctx);
+        BN_CTX_free(ctx);
         unsigned int nSize = ECDSA_size(pkey);
         vchSig.resize(nSize); // Make sure it is big enough
-        assert(ECDSA_sign(0, (unsigned char*)&hash, sizeof(hash), &vchSig[0], &nSize, pkey));
+        unsigned char *pos = &vchSig[0];
+        nSize = i2d_ECDSA_SIG(sig, &pos);
+        ECDSA_SIG_free(sig);
         vchSig.resize(nSize); // Shrink to fit actual size
         return true;
     }
 
     bool Verify(const uint256 &hash, const std::vector<unsigned char>& vchSig) {
-        if (vchSig.empty())
-            return false;
-
-        // New versions of OpenSSL will reject non-canonical DER signatures. de/re-serialize first.
-        unsigned char *norm_der = NULL;
-        ECDSA_SIG *norm_sig = ECDSA_SIG_new();
-        const unsigned char* sigptr = &vchSig[0];
-        assert(norm_sig);
-        if (d2i_ECDSA_SIG(&norm_sig, &sigptr, vchSig.size()) == NULL)
-        {
-            /* As of OpenSSL 1.0.0p d2i_ECDSA_SIG frees and nulls the pointer on
-             * error. But OpenSSL's own use of this function redundantly frees the
-             * result. As ECDSA_SIG_free(NULL) is a no-op, and in the absence of a
-             * clear contract for the function behaving the same way is more
-             * conservative.
-             */
-            ECDSA_SIG_free(norm_sig);
-            return false;
-        }
-        int derlen = i2d_ECDSA_SIG(norm_sig, &norm_der);
-        ECDSA_SIG_free(norm_sig);
-        if (derlen <= 0)
-            return false;
-
         // -1 = error, 0 = bad sig, 1 = good
-        bool ret = ECDSA_verify(0, (unsigned char*)&hash, sizeof(hash), norm_der, derlen, pkey) == 1;
-        OPENSSL_free(norm_der);
-        return ret;
+        if (ECDSA_verify(0, (unsigned char*)&hash, sizeof(hash), &vchSig[0], vchSig.size(), pkey) != 1)
+            return false;
+        return true;
     }
 
     bool SignCompact(const uint256 &hash, unsigned char *p64, int &rec) {
@@ -245,14 +238,9 @@ public:
         ECDSA_SIG *sig = ECDSA_do_sign((unsigned char*)&hash, sizeof(hash), pkey);
         if (sig==NULL)
             return false;
-
-        const BIGNUM *ecsig_r = NULL;
-        const BIGNUM *ecsig_s = NULL;
-        ECDSA_SIG_get0(sig, &ecsig_r, &ecsig_s);
-
         memset(p64, 0, 64);
-        int nBitsR = BN_num_bits(ecsig_r);
-        int nBitsS = BN_num_bits(ecsig_s);
+        int nBitsR = BN_num_bits(sig->r);
+        int nBitsS = BN_num_bits(sig->s);
         if (nBitsR <= 256 && nBitsS <= 256) {
             CPubKey pubkey;
             GetPubKey(pubkey, true);
@@ -269,8 +257,8 @@ public:
                 }
             }
             assert(fOk);
-            BN_bn2bin(ecsig_r,&p64[32-(nBitsR+7)/8]);
-            BN_bn2bin(ecsig_s,&p64[64-(nBitsS+7)/8]);
+            BN_bn2bin(sig->r,&p64[32-(nBitsR+7)/8]);
+            BN_bn2bin(sig->s,&p64[64-(nBitsS+7)/8]);
         }
         ECDSA_SIG_free(sig);
         return fOk;
@@ -285,12 +273,8 @@ public:
         if (rec<0 || rec>=3)
             return false;
         ECDSA_SIG *sig = ECDSA_SIG_new();
-
-        BIGNUM *ecsig_r = NULL;
-        BIGNUM *ecsig_s = NULL;
-        BN_bin2bn(&p64[0],  32, ecsig_r);
-        BN_bin2bn(&p64[32], 32, ecsig_s);
-        ECDSA_SIG_set0(sig, ecsig_r, ecsig_s);
+        BN_bin2bn(&p64[0],  32, sig->r);
+        BN_bin2bn(&p64[32], 32, sig->s);
         bool ret = ECDSA_SIG_recover_key_GFp(pkey, sig, (unsigned char*)&hash, sizeof(hash), rec, 0) == 1;
         ECDSA_SIG_free(sig);
         return ret;
@@ -632,15 +616,3 @@ bool CExtPubKey::Derive(CExtPubKey &out, unsigned int nChild) const {
     out.nChild = nChild;
     return pubkey.Derive(out.pubkey, out.vchChainCode, nChild, vchChainCode);
 }
-
-bool ECC_InitSanityCheck() {
-    EC_KEY *pkey = EC_KEY_new_by_curve_name(NID_secp256k1);
-    if(pkey == NULL)
-        return false;
-    EC_KEY_free(pkey);
-
-    // TODO Is there more EC functionality that could be missing?
-    return true;
-}
-
-
