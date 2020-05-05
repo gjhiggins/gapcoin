@@ -22,7 +22,8 @@ class WalletModel;
 
 class BlockExplorer;
 class MiningPage;
-// class NewsPage;
+class RecordsPage;
+class NotaryPage;
 
 class CWallet;
 
@@ -59,17 +60,6 @@ public:
     bool addWallet(const QString& name, WalletModel *walletModel);
     bool setCurrentWallet(const QString& name);
     void removeAllWallets();
-
-    /** Used by WalletView to allow access to needed QActions */
-    // Todo: Use Qt signals for these
-    // QAction * getOverviewAction() { return overviewAction; }
-    // QAction * getHistoryAction() { return historyAction; }
-    // QAction * getReceiveCoinsAction() { return receiveCoinsAction; }
-    // QAction * getSendCoinsAction() { return sendCoinsAction; }
-    // QAction * getMiningAction() { return miningAction; }
-
-	// void timerEvent(QTimerEvent *event);
-	// void resizeEvent(QResizeEvent *event);
 #endif
 
 protected:
@@ -78,6 +68,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     bool eventFilter(QObject *object, QEvent *event);
+	void timerEvent(QTimerEvent *event);
 
 private:
     ClientModel *clientModel;
@@ -92,7 +83,7 @@ private:
 
     QMenuBar *appMenuBar;
 	QAction *exploreAction;
-    QAction *newsAction;
+    QAction *recordsPageAction;
     QAction *overviewAction;
     QAction *historyAction;
     QAction *quitAction;
@@ -112,13 +103,17 @@ private:
     QAction *openRPCConsoleAction;
     QAction *openAction;
 	QAction *openBlockExplorerAction;
+	QAction *openRecordsPageAction;
     QAction *miningAction;
+    QAction *notaryAction;
     QAction *showHelpMessageAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
     RPCConsole *rpcConsole;
     BlockExplorer  *explorerWindow;
+    RecordsPage  *recordsPage;
+
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
     int spinnerFrame;
@@ -186,10 +181,12 @@ private slots:
     void gotoHistoryPage();
     /** Switch to Explorer Page */
     void gotoBlockExplorerPage(); 
+    /** Switch to records page */
+    void gotoRecordsPage();
     /** Switch to Mining Page */
     void gotoMiningPage();
-    /** Switch to news page */
-    // void gotoNewsPage();
+    /** Switch to Notary Page */
+    void gotoNotaryPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

@@ -94,11 +94,13 @@ QT_FORMS_UI = \
   forms/helpmessagedialog.ui \
   forms/intro.ui \
   forms/miningpage.ui \
+  forms/notarypage.ui \
   forms/openuridialog.ui \
   forms/optionsdialog.ui \
   forms/overviewpage.ui \
   forms/receivecoinsdialog.ui \
   forms/receiverequestdialog.ui \
+  forms/recordspage.ui \
   forms/rpcconsole.ui \
   forms/sendcoinsdialog.ui \
   forms/sendcoinsentry.ui \
@@ -125,6 +127,7 @@ QT_MOC_CPP = \
   moc_macnotificationhandler.cpp \
   moc_miningpage.cpp \
   moc_monitoreddatamapper.cpp \
+  moc_notarypage.cpp \
   moc_notificator.cpp \
   moc_openuridialog.cpp \
   moc_optionsdialog.cpp \
@@ -137,6 +140,7 @@ QT_MOC_CPP = \
   moc_receivecoinsdialog.cpp \
   moc_receiverequestdialog.cpp \
   moc_recentrequeststablemodel.cpp \
+  moc_recordspage.cpp \
   moc_rpcconsole.cpp \
   moc_sendcoinsdialog.cpp \
   moc_sendcoinsentry.cpp \
@@ -191,6 +195,7 @@ BITCOIN_QT_H = \
   macnotificationhandler.h \
   miningpage.h \
   monitoreddatamapper.h \
+  notarypage.h \
   notificator.h \
   openuridialog.h \
   optionsdialog.h \
@@ -204,6 +209,7 @@ BITCOIN_QT_H = \
   receivecoinsdialog.h \
   receiverequestdialog.h \
   recentrequeststablemodel.h \
+  recordspage.h \
   rpcconsole.h \
   sendcoinsdialog.h \
   sendcoinsentry.h \
@@ -258,6 +264,7 @@ RES_ICONS = \
   res/icons/mining_inactive.png \
   res/icons/overview.png \
   res/icons/news.png \
+  res/icons/notary.png \
   res/icons/qrcode.png \
   res/icons/quit.png \
   res/icons/receive.png \
@@ -287,12 +294,14 @@ BITCOIN_QT_CPP = \
   intro.cpp \
   miningpage.cpp \
   monitoreddatamapper.cpp \
+  notarypage.cpp \
   notificator.cpp \
   optionsdialog.cpp \
   optionsmodel.cpp \
   qcustomplot.cpp \
   qvalidatedlineedit.cpp \
   qvaluecombobox.cpp \
+  recordspage.cpp \
   rpcconsole.cpp \
   splashscreen.cpp \
   trafficgraphwidget.cpp \
@@ -309,6 +318,7 @@ BITCOIN_QT_CPP += \
   coincontroltreewidget.cpp \
   editaddressdialog.cpp \
   miningpage.cpp \
+  notarypage.cpp \
   openuridialog.cpp \
   overviewpage.cpp \
   paymentrequestplus.cpp \
@@ -317,6 +327,7 @@ BITCOIN_QT_CPP += \
   receivecoinsdialog.cpp \
   receiverequestdialog.cpp \
   recentrequeststablemodel.cpp \
+  recordspage.cpp \
   sendcoinsdialog.cpp \
   sendcoinsentry.cpp \
   signverifymessagedialog.cpp \

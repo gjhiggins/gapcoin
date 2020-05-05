@@ -304,9 +304,9 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
 
 Value sendtoaddress(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() < 2 || params.size() > 4)
+    if (fHelp || params.size() < 2 || params.size() > 5)
         throw runtime_error(
-            "sendtoaddress \"gapcoinaddress\" amount ( \"comment\" \"comment-to\" )\n"
+            "sendtoaddress \"gapcoinaddress\" amount ( \"comment\" \"comment-to\"  \"tx-comment\")\n"
             "\nSent an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
@@ -317,6 +317,8 @@ Value sendtoaddress(const Array& params, bool fHelp)
             "4. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
             "                             to which you're sending the transaction. This is not part of the \n"
             "                             transaction, just kept in your wallet.\n"
+            "5. \"tx-comment\"  (string, optional) A notarisation string to be permanently preserved as part \n"
+            "                             of the blockchain \n"
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
@@ -338,6 +340,15 @@ Value sendtoaddress(const Array& params, bool fHelp)
         wtx.mapValue["comment"] = params[2].get_str();
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
         wtx.mapValue["to"]      = params[3].get_str();
+
+     // Transaction comment
+    std::string bricoleurspeech;
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
+    {
+        bricoleurspeech = params[4].get_str();
+        if (bricoleurspeech.length() > MAX_TX_COMMENT_LEN)
+            bricoleurspeech.resize(MAX_TX_COMMENT_LEN);
+     }
 
     EnsureWalletIsUnlocked();
 
@@ -730,9 +741,9 @@ Value movecmd(const Array& params, bool fHelp)
 
 Value sendfrom(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() < 3 || params.size() > 6)
+    if (fHelp || params.size() < 3 || params.size() > 7)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"togapcoinaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
+            "sendfrom \"fromaccount\" \"togapcoinaddress\" amount ( minconf \"comment\" \"comment-to\" \"tx-comment\")\n"
             "\nSent an amount from an account to a gapcoin address.\n"
             "The amount is a real and is rounded to the nearest 0.00000001."
             + HelpRequiringPassphrase() + "\n"
@@ -746,6 +757,8 @@ Value sendfrom(const Array& params, bool fHelp)
             "6. \"comment-to\"        (string, optional) An optional comment to store the name of the person or organization \n"
             "                                     to which you're sending the transaction. This is not part of the transaction, \n"
             "                                     it is just kept in your wallet.\n"
+            "7. \"tx-comment\"        (string, optional) A notarisation string to be permanently preserved as part \n"
+            "                                     of the blockchain \n"
             "\nResult:\n"
             "\"transactionid\"        (string) The transaction id.\n"
             "\nExamples:\n"
@@ -773,6 +786,14 @@ Value sendfrom(const Array& params, bool fHelp)
     if (params.size() > 5 && params[5].type() != null_type && !params[5].get_str().empty())
         wtx.mapValue["to"]      = params[5].get_str();
 
+    std::string bricoleurspeech;
+    if (params.size() > 6 && params[6].type() != null_type && !params[6].get_str().empty())
+    {
+        bricoleurspeech = params[6].get_str();
+        if (bricoleurspeech.length() > MAX_TX_COMMENT_LEN)
+            bricoleurspeech.resize(MAX_TX_COMMENT_LEN);
+    }
+
     EnsureWalletIsUnlocked();
 
     // Check funds
@@ -793,7 +814,7 @@ Value sendmany(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" )\n"
+            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\"  \"tx-comment\" )\n"
             "\nSend multiple times. Amounts are double-precision floating point numbers."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
@@ -805,6 +826,8 @@ Value sendmany(const Array& params, bool fHelp)
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
             "4. \"comment\"             (string, optional) A comment\n"
+            "5. \"tx-comment\"          (string, optional) A notarisation string to be permanently preserved as part \n"
+            "                                     of the blockchain \n"
             "\nResult:\n"
             "\"transactionid\"          (string) The transaction id for the send. Only 1 transaction is created regardless of \n"
             "                                    the number of addresses.\n"
@@ -824,9 +847,13 @@ Value sendmany(const Array& params, bool fHelp)
         nMinDepth = params[2].get_int();
 
     CWalletTx wtx;
+    std::string strBRICSpeech;
+
     wtx.strFromAccount = strAccount;
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
         wtx.mapValue["comment"] = params[3].get_str();
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
+        strBRICSpeech = params[4].get_str();
 
     set<CBitcoinAddress> setAddress;
     vector<pair<CScript, int64_t> > vecSend;
@@ -1430,6 +1457,104 @@ Value listsinceblock(const Array& params, bool fHelp)
 
     return ret;
 }
+
+/* FIXME
+Value getnotarytransaction(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() < 1 || params.size() > 2)
+        throw runtime_error(
+            "getnotarytransaction <notaryid> [multipleResults]\n"
+            "Get detailed information about <notaryid>\n"
+            "\nSearching can take a while\n");
+
+
+    uint256 hash;
+    string strHash;
+    if (params.size() > 0) 
+    	strHash = params[0].get_str();
+    hash.SetHex(strHash);
+
+    bool multipleresults = false;
+    if (params.size() > 1) {
+           multipleresults =  params[1].get_bool();
+   }
+
+    Array notaryinfo;
+    bool notaryFound = false;
+    int blockstogoback = chainActive[chainActive.Height() - 250000];
+    
+    const CBlockIndex* pindexFirst = chainActive[chainActive.Height();
+    for (int i = 0; pindexFirst && i < blockstogoback; i++)
+    {
+
+	CBlock block;
+    	block.ReadFromDisk(pindexFirst, true);
+
+    	BOOST_FOREACH (const CTransaction& tx, block.vtx)
+    	{	
+		if (tx.strBRICSpeech == hash.GetHex()) {
+                Object entry;
+			notaryFound = true;
+			
+			entry.push_back(Pair("notaryid", hash.GetHex()));
+			entry.push_back(Pair("txid", tx.GetHash().GetHex()));
+			
+			notaryinfo.push_back(entry);
+
+		}
+    	}
+			
+	if (!multipleresults && notaryFound)	
+		break;
+
+	pindexFirst = pindexFirst->pprev;
+    }
+
+    if (!notaryFound) 
+            		throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Notary transaction not found");
+    
+    return notaryinfo; 
+}
+
+Value sendnotarytransaction(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() < 1)
+        throw runtime_error(
+            "sendnotarytransaction <file>\n"
+            "<file> is either a file or a string you want to notarize\n"
+            + HelpRequiringPassphrase());
+
+    // Wallet comments
+    CWalletTx wtx;
+    std::string prefix = "notary";
+
+    unsigned char hashSha[SHA256_DIGEST_LENGTH];
+    FILE* file=fopen(params[0].get_str().c_str(),"rb");
+    if(file==NULL) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open file");
+    }
+    
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    char buffer[4096];
+    int bytesRead=0;
+    while((bytesRead=fread(buffer,1,4096,file))!=0) {
+        SHA256_Update(&sha256,buffer,bytesRead);
+    }
+    SHA256_Final(hashSha,&sha256);
+    std::string nHash = HashToString(hashSha, SHA256_DIGEST_LENGTH);
+    fclose(file);
+
+    if (pwalletMain->IsLocked())
+        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
+
+    string strError = pwalletMain->SendBRICSpeech(wtx, nHash, prefix);
+    if (strError != "")
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+
+    return wtx.GetHash().GetHex();
+}
+*/
 
 Value gettransaction(const Array& params, bool fHelp)
 {

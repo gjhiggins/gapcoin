@@ -54,6 +54,9 @@ public:
     double getVerificationProgress() const;
     QDateTime getLastBlockDate() const;
 
+    bool getMiningStarted() const;
+    void setMining(bool mining, int count);
+/*
     // ----
 
     enum MiningType
@@ -63,7 +66,6 @@ public:
     };
 
     MiningType getMiningType() const;
-    bool getMiningStarted() const;
 
     QString getMiningServer() const;
     void setMiningServer(QString server);
@@ -80,10 +82,9 @@ public:
     double GetDifficulty() const;
 
     // void setMining(MiningType type, bool mining, int percent);
-    void setMining(MiningType type, bool mining, int threads, int hashrate);
 
     // ----
-
+*/
     //! Return network (main, testnet3, regtest)
     QString getNetworkName() const;
     //! Return true if core is doing initial block download
@@ -106,10 +107,11 @@ private:
     bool cachedReindexing;
     bool cachedImporting;
 
+    bool miningStarted;
+/*
     // ----
 
     MiningType miningType;
-    bool miningStarted;
     bool miningDebug;
     int miningScanTime;
     QString miningServer;
@@ -119,6 +121,7 @@ private:
     bool fDebug;
 
     // ----
+*/
 
     int numBlocksAtStartup;
 

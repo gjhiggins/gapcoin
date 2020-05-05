@@ -228,6 +228,8 @@ public:
 
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
 
+    // FIXME
+    // void SearchNotaryTransactions(uint256 hash, std::vector<std::pair<std::string, int> >& vTxResults);
     /** Increment the next transaction order id
         @return next transaction order id
      */
@@ -254,12 +256,22 @@ public:
     int64_t GetUnconfirmedBalance() const;
     int64_t GetImmatureBalance() const;
     bool CreateTransaction(const std::vector<std::pair<CScript, int64_t> >& vecSend,
+// FIXME
+//                           CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, std::string strBRICSpeech, const CCoinControl *coinControl = NULL);
                            CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, const CCoinControl *coinControl = NULL);
     bool CreateTransaction(CScript scriptPubKey, int64_t nValue,
+// FIXME
+//                            CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, std::string strBRICSpeech, const CCoinControl *coinControl = NULL);
                            CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, const CCoinControl *coinControl = NULL);
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey);
+    // FIXME
+    // std::string SendMoney(CScript scriptPubKey, int64_t nValue, CWalletTx& wtxNew, std::string strBRICSpeech = "");
     std::string SendMoney(CScript scriptPubKey, int64_t nValue, CWalletTx& wtxNew);
+    // FIXME
+    // std::string SendMoneyToDestination(const CTxDestination &address, int64_t nValue, CWalletTx& wtxNew, std::string strBRICSpeech = "");
     std::string SendMoneyToDestination(const CTxDestination &address, int64_t nValue, CWalletTx& wtxNew);
+    // FIXME
+    // std::string SendBRICSpeech(CWalletTx& wtxNew, std::string bricoleurSpeech, std::string prefix = "", bool fAskFee=false);
 
     bool NewKeyPool();
     bool TopUpKeyPool(unsigned int kpSize = 0);

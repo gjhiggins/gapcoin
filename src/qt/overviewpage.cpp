@@ -164,7 +164,8 @@ OverviewPage::OverviewPage(QWidget *parent) :
 
 void OverviewPage::updatePlot(int count)
 {
-	static int64_t lastUpdate = 0;
+    // qDebug() << "***************** Updating overviewpage plot";
+    static int64_t lastUpdate = 0;
     // Double Check to make sure we don't try to update the plot when it is disabled
     if(!GetBoolArg("-chart", true)) { return; }
     if (GetTime() - lastUpdate < 60) { return; } // This is just so it doesn't redraw rapidly during syncing
@@ -186,17 +187,17 @@ void OverviewPage::updatePlot(int count)
     vX.resize(numLookBack);
     vY.resize(numLookBack);
 
-    if(fDebug) {
-       if(height != pindex->nHeight) {
-           printf("Plot: Warning: nBestHeight and pindexBest->nHeight don't match: %d:%d:\n", height, pindex->nHeight);
-       }
-    }
+    // if(fDebug) {
+    //    if(height != pindex->nHeight) {
+    //        printf("Plot: Warning: nBestHeight and pindexBest->nHeight don't match: %d:%d:\n", height, pindex->nHeight);
+    //    }
+    // }
 
-    if(fDebug) { printf("Plot: Reading blockchain\n"); }
+    // if(fDebug) { printf("Plot: Reading blockchain\n"); }
     CBlockIndex* itr = pindex;
     while(i >= 0 && itr != NULL)
     {
-        if(fDebug) { printf("Plot: Processing block: %d - pprev: %p\n", itr->nHeight, itr->pprev); }
+        // if(fDebug) { printf("Plot: Processing block: %d - pprev: %p\n", itr->nHeight, itr->pprev); }
         vX[i] = itr->nHeight;
         vY[i] = GetNetworkHashPS(120, vX[i]).get_int64();
         hashMax = std::max<int64_t>(hashMax, vY[i]);
@@ -206,7 +207,7 @@ void OverviewPage::updatePlot(int count)
         x--;
     }
 
-    if(fDebug) { printf("Plot: Drawing plot\n"); }
+    // if(fDebug) { printf("Plot: Drawing plot\n"); }
 
     ui->hashplot->graph(0)->setData(vX, vY);
 
@@ -221,7 +222,7 @@ void OverviewPage::updatePlot(int count)
 
     ui->hashplot->replot();
 
-    if(fDebug) { printf("Plot: Done!\n"); }
+    // if(fDebug) { printf("Plot: Done!\n"); }
 }
 
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)

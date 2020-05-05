@@ -126,6 +126,13 @@ void WalletFrame::gotoBlockExplorerPage()
         i.value()->gotoBlockExplorerPage();
 }
 
+void WalletFrame::gotoRecordsPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoRecordsPage();
+}
+
 void WalletFrame::gotoMiningPage()
 {
     QMap<QString, WalletView*>::const_iterator i;
@@ -133,12 +140,12 @@ void WalletFrame::gotoMiningPage()
         i.value()->gotoMiningPage();
 }
 
-// void WalletFrame::gotoNewsPage()
-// {
-//     QMap<QString, WalletView*>::const_iterator i;
-//     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-//         i.value()->gotoNewsPage();
-// }
+void WalletFrame::gotoNotaryPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoNotaryPage();
+}
 
 void WalletFrame::gotoReceiveCoinsPage()
 {

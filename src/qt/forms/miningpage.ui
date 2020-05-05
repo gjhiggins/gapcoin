@@ -15,11 +15,11 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_1">
+    <layout class="QHBoxLayout" name="settings">
      <item>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="minerDetails">
        <item row="0" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="threadSettings">
          <item>
           <widget class="QLabel" name="labelNCores">
            <property name="text">
@@ -45,31 +45,17 @@
          </item>
         </layout>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="noofthreadsLabel">
          <property name="text">
-          <string>Average spacing between your blocks:</string>
+          <string>Number of threads to use:</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="yourprimeratelabelText">
          <property name="text">
-          <string>Your hashrate (built-in miner):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Network hashrate:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Number of threads to use:</string>
+          <string>Your primerate (built-in miner):</string>
          </property>
         </widget>
        </item>
@@ -80,10 +66,24 @@
          </property>
         </widget>
        </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="networkprimeratelabelText">
+         <property name="text">
+          <string>Network primerate:</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="1">
         <widget class="QLabel" name="labelNethashrate">
          <property name="text">
           <string>?</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="averageblockspacinglabelText">
+         <property name="text">
+          <string>Average spacing between your blocks:</string>
          </property>
         </widget>
        </item>
@@ -97,22 +97,109 @@
       </layout>
      </item>
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      <layout class="QGridLayout" name="SieveSettings">
+       <item row="0" column="0">
+        <widget class="QLabel" name="headershiftLabel">
+         <property name="text">
+          <string>Header shift</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+         <property name="buddy">
+          <cstring>headershiftValue</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QValidatedLineEdit" name="headershiftValue">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Sets the header shift - sieve size will be 2^shift size.</string>
+         </property>
+         <property name="text">
+          <string>25</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="sievesizelabelText">
+         <property name="text">
+          <string>Sieve size:</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QValidatedLineEdit" name="sievesizeValue">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>The size of the prime sieve, 2^shift</string>
+         </property>
+         <property name="text">
+          <string>33554432</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="sieveprimeslabelText">
+         <property name="text">
+          <string>Primes in sieve:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QValidatedLineEdit" name="sieveprimesValue">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Sets the amount of primes used in the sieve.</string>
+         </property>
+         <property name="text">
+          <string>900000</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="miningSwitch">
      <item>
       <widget class="QPushButton" name="pushSwitchMining">
        <property name="text">
@@ -121,7 +208,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
+      <spacer name="miningswitchhorizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -134,13 +221,6 @@
       </spacer>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QLabel" name="labelAddress">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -156,9 +236,54 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="miningStatisticsLayout">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <widget class="QLabel" name="miningStatisticslabelText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Mining status:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="miningStatistics">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <!--
+       <property name="text">
+        <string>Not mining</string>
+       </property>
+       -->
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="chartsLayout">
+     <item>
+      <layout class="QVBoxLayout" name="difficultyplotLayout">
        <item>
         <widget class="QCustomPlot" name="diffplot_difficulty" native="true">
          <property name="minimumSize">
@@ -172,7 +297,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="hashrateplotLayout">
        <item>
         <widget class="QCustomPlot" name="diffplot_hashrate" native="true">
          <property name="minimumSize">
@@ -195,6 +320,11 @@
    <extends>QWidget</extends>
    <header>qt/qcustomplot.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QValidatedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

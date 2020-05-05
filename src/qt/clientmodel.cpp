@@ -9,11 +9,11 @@
 #include "alert.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include "init.h"
+// #include "init.h"
 #include "main.h"
-#include "miner.h"
+// #include "miner.h"
 #include "net.h"
-#include "rpcserver.h"
+// #include "rpcserver.h"
 #include "ui_interface.h"
 
 #include <stdint.h>
@@ -34,9 +34,9 @@ ClientModel::ClientModel(OptionsModel *optionsModel, QObject *parent) :
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
     pollTimer->start(MODEL_UPDATE_DELAY);
 
-    miningType = SoloMining;
+    // miningType = SoloMining;
     miningStarted = false;
-    fDebug = false;
+    // fDebug = false;
 
     subscribeToCoreSignals();
 }
@@ -72,16 +72,23 @@ int ClientModel::getNumBlocksAtStartup()
     return numBlocksAtStartup;
 }
 
+bool ClientModel::getMiningStarted() const
+{
+    return miningStarted;
+}
+
+void ClientModel::setMining(bool mining, int count)
+{
+    miningStarted = mining;
+    emit miningChanged(mining, count);
+}
+
+/*
 // ----
 
 ClientModel::MiningType ClientModel::getMiningType() const
 {
     return miningType;
-}
-
-bool ClientModel::getMiningStarted() const
-{
-    return miningStarted;
 }
 
 QString ClientModel::getMiningServer() const
@@ -185,22 +192,8 @@ double ClientModel::GetDifficulty() const
 //     // emit miningChanged(mining, hashrate);
 // }
 
-void ClientModel::setMining(MiningType type, bool mining, int threads, int hashrate)
-{
-    if (type == SoloMining && mining != miningStarted)
-    {
-        GenerateGapcoins(mining ? 1 : 0, pwalletMain, threads);
-    }
-    miningType = type;
-    miningStarted = mining;
-    // WriteSetting("miningStarted", mining);
-    // WriteSetting("fLimitProcessors", 1);
-    // WriteSetting("nLimitProcessors", threads);
-    emit miningChanged(mining, hashrate);
-}
-
 // ----
-
+*/
 quint64 ClientModel::getTotalBytesRecv() const
 {
     return CNode::GetTotalBytesRecv();

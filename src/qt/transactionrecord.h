@@ -76,26 +76,39 @@ public:
         RecvWithAddress,
         RecvFromOther,
         SendToSelf
+        // FIXME
+        // SendToSelf,
+        // Notary,
+        // NotarySendToAddress,
+        // NotarySendToOther
     };
 
     /** Number of confirmation recommended for accepting a transaction */
     static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord():
+            // FIXME
+            // hash(), time(0), type(Other), address(""), debit(0), credit(0), bricoleurspeech(""), idx(0)
             hash(), time(0), type(Other), address(""), debit(0), credit(0), idx(0)
     {
     }
 
     TransactionRecord(uint256 hash, qint64 time):
             hash(hash), time(time), type(Other), address(""), debit(0),
+            // FIXME
+            // credit(0), bricoleurspeech(""), idx(0)
             credit(0), idx(0)
     {
     }
 
     TransactionRecord(uint256 hash, qint64 time,
                 Type type, const std::string &address,
+                // FIXME
+                // qint64 debit, qint64 credit), std::string bricoleurspeech):
                 qint64 debit, qint64 credit):
             hash(hash), time(time), type(type), address(address), debit(debit), credit(credit),
+            // FIXME
+            // bricoleurspeech(clamspeech), idx(0)
             idx(0)
     {
     }
@@ -113,6 +126,8 @@ public:
     std::string address;
     qint64 debit;
     qint64 credit;
+    // FIXME
+    // std::string bricoleurspeech;
     /**@}*/
 
     /** Subtransaction index, for sort key */

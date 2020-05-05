@@ -1061,6 +1061,15 @@ void CreatePidFile(const boost::filesystem::path &path, pid_t pid)
 }
 #endif
 
+string HashToString(unsigned char* hash,int n) {
+    char outputBuffer[2*n+1];
+    for(int i=0;i<n;i++) {
+        sprintf(outputBuffer+(i*2),"%02x",hash[i]);
+    }
+    outputBuffer[2*n]=0;
+    return string(outputBuffer);
+}
+
 bool RenameOver(boost::filesystem::path src, boost::filesystem::path dest)
 {
 #ifdef WIN32

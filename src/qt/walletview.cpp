@@ -11,10 +11,11 @@
 #include "clientmodel.h"
 #include "guiutil.h"
 #include "miningpage.h"
-// #include "newspage.h"
+#include "notarypage.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
 #include "receivecoinsdialog.h"
+#include "recordspage.h"
 #include "sendcoinsdialog.h"
 #include "signverifymessagedialog.h"
 #include "transactiontablemodel.h"
@@ -39,8 +40,9 @@ WalletView::WalletView(QWidget *parent):
     // Create tabs
     overviewPage = new OverviewPage();
 	explorerWindow = new BlockExplorer(this);
+    recordsPage = new RecordsPage(this);
     miningPage = new MiningPage(this);
-    // newsPage = new NewsPage(this);
+    notaryPage = new NotaryPage(this);
 
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -60,14 +62,12 @@ WalletView::WalletView(QWidget *parent):
     receiveCoinsPage = new ReceiveCoinsDialog();
     sendCoinsPage = new SendCoinsDialog();
 
-
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
-	addWidget(explorerWindow);
     addWidget(miningPage);
-    // addWidget(newsPage);
+    addWidget(notaryPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -112,11 +112,21 @@ void WalletView::setClientModel(ClientModel *clientModel)
 
     overviewPage->setClientModel(clientModel);
     miningPage->setClientModel(clientModel);
+    notaryPage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
 {
     this->walletModel = walletModel;
+
+    // Put transaction list in tabs
+    /*
+    transactionView->setModel(walletModel);
+    overviewPage->setWalletModel(walletModel);
+    receiveCoinsPage->setModel(walletModel);
+    sendCoinsPage->setModel(walletModel);
+    miningPage->setModel(walletModel);
+    */
 
     if (walletModel)
     {
@@ -129,6 +139,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
         receiveCoinsPage->setModel(walletModel);
         sendCoinsPage->setModel(walletModel);
         miningPage->setModel(walletModel);
+        notaryPage->setModel(walletModel);
 
         // Handle changes in encryption status
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SIGNAL(encryptionStatusChanged(int)));
@@ -190,15 +201,20 @@ void WalletView::gotoBlockExplorerPage()
     setCurrentWidget(explorerWindow);
 }
 
+void WalletView::gotoRecordsPage()
+{
+    setCurrentWidget(recordsPage);
+}
+
 void WalletView::gotoMiningPage()
 {
     setCurrentWidget(miningPage);
 }
 
-//void WalletView::gotoNewsPage()
-//{
-//    setCurrentWidget(newsPage);
-//}
+void WalletView::gotoNotaryPage()
+{
+    setCurrentWidget(notaryPage);
+}
 
 void WalletView::gotoSignMessageTab(QString addr)
 {

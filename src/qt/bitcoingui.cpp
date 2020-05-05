@@ -19,7 +19,8 @@
 #include "walletmodel.h"
 #include "blockexplorer.h"
 #include "miningpage.h"
-// #include "newspage.h"
+#include "notarypage.h"
+#include "recordspage.h"
 #endif
 
 #ifdef Q_OS_MAC
@@ -34,7 +35,6 @@
 #include <QApplication>
 #include <QDateTime>
 #include <QDesktopWidget>
-#include <QDesktopServices>
 #include <QDragEnterEvent>
 #include <QIcon>
 #include <QLabel>
@@ -129,6 +129,7 @@ BitcoinGUI::BitcoinGUI(bool fIsTestnet, QWidget *parent) :
         walletFrame = new WalletFrame(this);
         setCentralWidget(walletFrame);
         explorerWindow = new BlockExplorer(this);
+        recordsPage = new RecordsPage(this);
     } else
 #endif
     {
@@ -204,9 +205,11 @@ BitcoinGUI::BitcoinGUI(bool fIsTestnet, QWidget *parent) :
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
     connect(openBlockExplorerAction, SIGNAL(triggered()), explorerWindow, SLOT(show()));
+    connect(openRecordsPageAction, SIGNAL(triggered()), recordsPage, SLOT(show()));
 
     // prevents an oben debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), explorerWindow, SLOT(hide()));
+    connect(quitAction, SIGNAL(triggered()), recordsPage, SLOT(hide()));
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
@@ -271,19 +274,12 @@ void BitcoinGUI::createActions(bool fIsTestnet)
     miningAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(miningAction);
 
-    exploreAction = new QAction(QIcon(":/icons/explorer"), tr("&Explore the blockchain"), this);
-    exploreAction->setStatusTip(tr("Explore the blockchain"));
-    exploreAction->setToolTip(exploreAction->statusTip());
-    exploreAction->setCheckable(true);
-    exploreAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
-    tabGroup->addAction(exploreAction);
-
-    newsAction = new QAction(QIcon(":/icons/news"), tr("&News"), this);
-    newsAction->setStatusTip(tr("News Channel"));
-    newsAction->setToolTip(newsAction->statusTip());
-    newsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_9));
-    newsAction->setCheckable(true);
-    tabGroup->addAction(newsAction);
+    notaryAction = new QAction(QIcon(":/icons/notary"), tr("&Notary"), this);
+    notaryAction->setStatusTip(tr("Notarise files"));
+    notaryAction->setToolTip(notaryAction->statusTip());
+    notaryAction->setCheckable(true);
+    notaryAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
+    tabGroup->addAction(notaryAction);
 
     /*
     messageAction = new QAction(QIcon(":/icons/edit"), tr("&Messaging"), this);
@@ -308,9 +304,9 @@ void BitcoinGUI::createActions(bool fIsTestnet)
 
     connect(miningAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(miningAction, SIGNAL(triggered()), this, SLOT(gotoMiningPage()));
+    connect(notaryAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(notaryAction, SIGNAL(triggered()), this, SLOT(gotoNotaryPage()));
 
-    connect(newsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    // connect(newsAction, SIGNAL(triggered()), this, SLOT(gotoNewsPage()));
     /*
     connect(messageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(messageAction, SIGNAL(triggered()), this, SLOT(gotoMessagePage()));
@@ -356,9 +352,6 @@ void BitcoinGUI::createActions(bool fIsTestnet)
     openRPCConsoleAction = new QAction(QIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
 
-    openBlockExplorerAction = new QAction(QIcon(":/icons/explorer"), tr("&Block explorer window"), this);
-    openBlockExplorerAction->setStatusTip(tr("Block explorer window"));
-
     usedSendingAddressesAction = new QAction(QIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
     usedReceivingAddressesAction = new QAction(QIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
@@ -366,6 +359,11 @@ void BitcoinGUI::createActions(bool fIsTestnet)
 
     openAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_FileIcon), tr("Open &URI..."), this);
     openAction->setStatusTip(tr("Open a gapcoin: URI or payment request"));
+
+    openBlockExplorerAction = new QAction(QIcon(":/icons/explorer"), tr("&Block and transaction explorer"), this);
+    openBlockExplorerAction->setStatusTip(tr("Block explorer window"));
+    openRecordsPageAction = new QAction(QIcon(":/icons/news"), tr("&Record prime gaps"), this);
+    openRecordsPageAction->setStatusTip(tr("Details of Gapcoin-held record prime gaps"));
 
     showHelpMessageAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation), tr("&Command-line options"), this);
     showHelpMessageAction->setStatusTip(tr("Show the Gapcoin Core help message to get a list with possible Gapcoin command-line options"));
@@ -387,7 +385,8 @@ void BitcoinGUI::createActions(bool fIsTestnet)
         connect(usedSendingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedSendingAddresses()));
         connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
-	    connect(miningAction, SIGNAL(triggered()), this, SLOT(gotoMiningPage()));
+	    connect(openBlockExplorerAction, SIGNAL(triggered()), this, SLOT(gotoBlockExplorerPage()));
+	    connect(openRecordsPageAction, SIGNAL(triggered()), this, SLOT(gotoRecordsPage()));
     }
 #endif
 }
@@ -437,6 +436,7 @@ void BitcoinGUI::createMenuBar()
     help->addAction(aboutQtAction);
     help->addSeparator();
     help->addAction(openBlockExplorerAction);
+    help->addAction(openRecordsPageAction);
 }
 
 void BitcoinGUI::createToolBars()
@@ -450,7 +450,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         toolbar->addAction(miningAction);
-		toolbar->addAction(newsAction);
+        toolbar->addAction(notaryAction);
         /*
         toolbar->addAction(messageAction);
         */
@@ -521,6 +521,8 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     sendCoinsAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
+    miningAction->setEnabled(enabled);
+    notaryAction->setEnabled(enabled);
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
     changePassphraseAction->setEnabled(enabled);
@@ -529,6 +531,8 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     usedSendingAddressesAction->setEnabled(enabled);
     usedReceivingAddressesAction->setEnabled(enabled);
     openAction->setEnabled(enabled);
+    openBlockExplorerAction->setEnabled(enabled);
+    openRecordsPageAction->setEnabled(enabled);
 }
 
 void BitcoinGUI::createTrayIcon(bool fIsTestnet)
@@ -584,8 +588,8 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(optionsAction);
     trayIconMenu->addAction(openBlockExplorerAction);
+    trayIconMenu->addAction(openRecordsPageAction);
     trayIconMenu->addAction(openRPCConsoleAction);
-
 #ifndef Q_OS_MAC // This is built-in on Mac
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
@@ -680,16 +684,22 @@ void BitcoinGUI::gotoBlockExplorerPage()
     if (walletFrame) walletFrame->gotoBlockExplorerPage();
 }
 
+void BitcoinGUI::gotoRecordsPage()
+{
+    openRecordsPageAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoRecordsPage();
+}
+
 void BitcoinGUI::gotoMiningPage()
 {
     miningAction->setChecked(true);
     if (walletFrame) walletFrame->gotoMiningPage();
 }
 
-//void BitcoinGUI::gotoNewsPage()
-//{
-//    if (walletFrame) walletFrame->gotoNewsPage();
-//}
+void BitcoinGUI::gotoNotaryPage()
+{
+    if (walletFrame) walletFrame->gotoNotaryPage();
+}
 
 /*
 void BitcoinGUI::gotoMessagePage()
@@ -719,7 +729,6 @@ void BitcoinGUI::setNumBlocks(int count)
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbelled text)
     statusBar()->clearMessage();
 
-    // if(fDebug){ printf("NumBlocks: %d : %d\n", count, nTotalBlocks); }
     if(GetBoolArg("-chart", true) && count > 0 )
     {
         walletFrame->updatePlot(count);
@@ -831,12 +840,12 @@ void BitcoinGUI::setMining(bool mining, int hashrate)
 {
     if (mining)
     {
-        labelMiningIcon->setPixmap(QIcon(":/icons/mining_active").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelMiningIcon->setToolTip(tr("Mining Gapcoin at %1 hashes per second").arg(hashrate));
+        labelMiningIcon->setPixmap(QIcon(":/icons/mining_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelMiningIcon->setToolTip(tr("Mining Gapcoin at %1 primes per second").arg(hashrate));
     }
     else
     {
-        labelMiningIcon->setPixmap(QIcon(":/icons/mining_inactive").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelMiningIcon->setPixmap(QIcon(":/icons/mining_inactive").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
         labelMiningIcon->setToolTip(tr("Not mining Gapcoin"));
     }
 }
@@ -985,6 +994,11 @@ bool BitcoinGUI::eventFilter(QObject *object, QEvent *event)
     return QMainWindow::eventFilter(object, event);
 }
 
+void BitcoinGUI::timerEvent(QTimerEvent *event)
+{
+
+}
+
 #ifdef ENABLE_WALLET
 bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
@@ -1064,11 +1078,6 @@ void BitcoinGUI::detectShutdown()
             rpcConsole->hide();
         qApp->quit();
     }
-}
-
-void openWebsite(std::string url)
-{
-    QDesktopServices::openUrl(QUrl(QString::fromStdString(url), QUrl::TolerantMode));
 }
 
 static bool ThreadSafeMessageBox(BitcoinGUI *gui, const std::string& message, const std::string& caption, unsigned int style)

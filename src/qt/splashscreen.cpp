@@ -4,17 +4,16 @@
 
 #include "splashscreen.h"
 
-#include "../clientversion.h"
-#include "../init.h"
-// #include "ui_interface.h"
-#include "../util.h"
+#include "clientversion.h"
+#include "init.h"
+#include "ui_interface.h"
+#include "util.h"
 #ifdef ENABLE_WALLET
-#include "../wallet.h"
+#include "wallet.h"
 #endif
 
 #include <QApplication>
 #include <QPainter>
-
 
 SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f, bool isTestNet) :
     QSplashScreen(pixmap, f)

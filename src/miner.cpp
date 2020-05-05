@@ -434,6 +434,8 @@ void static GapcoinMiner(CWallet *pwallet, uint64_t nThread, uint64_t numThreads
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("gapcoin-miner");
 
+    LogPrintf("GapcoinMiner params: nMiningPrimes=%lld, nMiningSieveSize=%lld, nMiningShift=%lld.\n",
+        nMiningPrimes, nMiningSieveSize, nMiningShift);
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
@@ -469,7 +471,7 @@ void static GapcoinMiner(CWallet *pwallet, uint64_t nThread, uint64_t numThreads
         BlockProcessor processor(pblock, pwallet, &reservekey);
         sieve.set_pprocessor(&processor);
         int64_t nStart = GetTime();
-        
+
         /* provide unique hashes for each thread */
         pblock->nNonce = nThread;
 
@@ -478,7 +480,7 @@ void static GapcoinMiner(CWallet *pwallet, uint64_t nThread, uint64_t numThreads
             /* header hash has to be greater than 2^255 - 1 */
             while (pblock->GetHash() <= hashTarget)
               pblock->nNonce += numThreads;
-            
+
             uint256 hash = pblock->GetHash();
             std::vector<uint8_t> vHash(hash.begin(), hash.end());
 
@@ -505,9 +507,9 @@ void static GapcoinMiner(CWallet *pwallet, uint64_t nThread, uint64_t numThreads
                     nLogTime = GetTime();
                     LogPrintf("primemeter %6.0f primes/s\n", dHashesPerSec);
                 }
-                
+
             }
-            
+
 
             // Check for stop or if block needs to be rebuilt
             boost::this_thread::interruption_point();
