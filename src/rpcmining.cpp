@@ -240,6 +240,7 @@ Value setgenerate(const Array& params, bool fHelp)
     }
     else // Not -regtest: start generate thread, return immediately
     {
+        std::cout << "Mining params: sieve size=" << nMiningSieveSize << ", sieveprimes=" << nMiningPrimes << ", shift=" << nMiningShift << std::endl;
         mapArgs["-gen"] = (fGenerate ? "1" : "0");
         mapArgs ["-genproclimit"] = itostr(nGenProcLimit);
         GenerateGapcoins(fGenerate, pwalletMain, nGenProcLimit);

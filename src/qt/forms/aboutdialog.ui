@@ -13,160 +13,448 @@
   <property name="windowTitle">
    <string>About Gapcoin Core</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2">
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_0">
    <item>
-    <widget class="QLabel" name="label_4">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../bitcoin.qrc">:/images/about</pixmap>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+     <widget class="QWidget" name="tabAbout">
+      <attribute name="title">
+       <string>About Gapcoin</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="cursor">
-          <cursorShape>IBeamCursor</cursorShape>
+        <widget class="QLabel" name="graphic">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <property name="text">
-          <string>&lt;b&gt;Gapcoin Core&lt;/b&gt; version</string>
-         </property>
-         <property name="textInteractionFlags">
-          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         <property name="pixmap">
+          <pixmap resource="../bitcoin.qrc">:/images/about</pixmap>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="versionLabel">
-         <property name="cursor">
-          <cursorShape>IBeamCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string notr="true">0.3.666-beta</string>
-         </property>
-         <property name="textInteractionFlags">
-          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+         <layout class="QVBoxLayout" name="verticalLayout_1">
+           <item>
+             <widget class="QScrollArea" name="scrollArea">
+               <property name="verticalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOn</enum>
+               </property>
+               <property name="widgetResizable">
+                 <bool>true</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents">
+                 <property name="geometry">
+                   <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>659</width>
+                     <height>348</height>
+                   </rect>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_2">
+                   <item>
+                     <spacer name="verticalSpacer_0">
+                       <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                         <size>
+                           <width>20</width>
+                           <height>15</height>
+                         </size>
+                       </property>
+                     </spacer>
+                   </item>
+                   <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout">
+                       <item>
+                         <widget class="QLabel" name="label">
+                           <property name="cursor">
+                             <cursorShape>IBeamCursor</cursorShape>
+                           </property>
+                           <property name="text">
+                             <string>&lt;b&gt;Gapcoin Core&lt;/b&gt; version</string>
+                           </property>
+                           <property name="textInteractionFlags">
+                             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                           </property>
+                         </widget>
+                       </item>
+                       <item>
+                         <widget class="QLabel" name="versionLabel">
+                           <property name="cursor">
+                             <cursorShape>IBeamCursor</cursorShape>
+                           </property>
+                           <property name="text">
+                             <string notr="true">0.3.666-beta</string>
+                           </property>
+                           <property name="textInteractionFlags">
+                             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                           </property>
+                         </widget>
+                       </item>
+                       <item>
+                         <spacer name="horizontalSpacer">
+                           <property name="orientation">
+                             <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                             <size>
+                               <width>40</width>
+                               <height>20</height>
+                             </size>
+                           </property>
+                         </spacer>
+                       </item>
+                     </layout>
+                   </item>
+                   <item>
+                     <widget class="QLabel" name="copyrightLabel">
+                       <property name="cursor">
+                         <cursorShape>IBeamCursor</cursorShape>
+                       </property>
+                       <property name="text">
+                         <string notr="true">Copyright &amp;copy; 2009-YYYY The Bitcoin Core developers</string>
+                       </property>
+                       <property name="textFormat">
+                         <enum>Qt::RichText</enum>
+                       </property>
+                       <property name="textInteractionFlags">
+                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                       </property>
+                     </widget>
+                   </item>
+                   <item>
+                     <widget class="QLabel" name="copyrightLabel2">
+                       <property name="cursor">
+                         <cursorShape>IBeamCursor</cursorShape>
+                       </property>
+                       <property name="text">
+                         <string notr="true">Copyright &amp;copy; 2014-YYYY The Gapcoin Core developers</string>
+                       </property>
+                       <property name="textFormat">
+                         <enum>Qt::RichText</enum>
+                       </property>
+                       <property name="textInteractionFlags">
+                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                       </property>
+                     </widget>
+                   </item>
+                   <item>
+                     <widget class="QLabel" name="label_2">
+                       <property name="cursor">
+                         <cursorShape>IBeamCursor</cursorShape>
+                       </property>
+                       <property name="text">
+                         <string>This is experimental software.&lt;br/&gt;&lt;br/&gt;Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php.&lt;br/&gt;&lt;br/&gt;This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.&lt;hr/&gt;</string>
+                       </property>
+                       <property name="wordWrap">
+                         <bool>true</bool>
+                       </property>
+                       <property name="textInteractionFlags">
+                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                       </property>
+                     </widget>
+                   </item>
+                   <item>
+                     <spacer name="verticalSpacer_1">
+                       <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                         <size>
+                           <width>20</width>
+                           <height>50</height>
+                         </size>
+                       </property>
+                     </spacer>
+                   </item>
+                   <item>
+                    <widget class="QDialogButtonBox" name="buttonBox">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="standardButtons">
+                      <set>QDialogButtonBox::Ok</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                     <spacer name="verticalSpacer_2">
+                       <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                         <size>
+                           <width>20</width>
+                           <height>20</height>
+                         </size>
+                       </property>
+                     </spacer>
+                   </item>
+                   <item>
+                     <widget class="QLabel" name="title">
+                       <property name="cursor">
+                         <cursorShape>IBeamCursor</cursorShape>
+                       </property>
+                       <property name="text">
+                         <string>&lt;b&gt;BEEN A LONG, LONG TIME — R.A. Lafferty&lt;/b&gt; (&lt;i&gt;Fantastic&lt;/i&gt; Vol 20, No 2. Dec. 1970)</string>
+                       </property>
+                     </widget>
+                   </item>
+                   <item>
+                     <widget class="QLabel" name="opening">
+                       <property name="cursor">
+                         <cursorShape>IBeamCursor</cursorShape>
+                       </property>
+                       <property name="text">
+                         <string>IT DOESN’T END with one—it &lt;i&gt;Begins&lt;/i&gt; with a whimper.</string>
+                       </property>
+                     </widget>
+                   </item>
+                   <item>
+                     <widget class="QLabel" name="storytext">
+                       <property name="cursor">
+                         <cursorShape>IBeamCursor</cursorShape>
+                       </property>
+                       <property name="text">
+                         <string>It was a sundering Dawn—Incandescence to which all later lights are less than candles—Heat to which the heat of all later suns is but a burnt-out match—the Polarities that set up the tension forever.
+
+And in the middle was a whimper, just as was felt the first jerk that indicated that time had begun.
+
+The two Challenges stood taller than the radius of the space that was being born; and one weak creature, Boshel, stood in the middle, too craven to accept either challenge.
+
+“Uh, how long you fellows going to be gone?” Boshel snuffled.
+
+The Creative Event was the Revolt rending the Void in two. The two sides formed, opposing Nations of Lightning split above the steep chasm. Two Champions had it out with a bitterness that has never passed—Michael wrapped in white fire—and Helel swollen with black and purple blaze. And their followers with them. It has been put into allegory as Acceptance and Rejection, and as Good and Evil; but in the Beginning there was the Polarity by which the universes are sustained.
+
+Between them, like a pigmy, stood Boshel alone in whimpering hesitation. 
+
+“Get the primordial metal out of it if you’re coming with us,” Helel growled like cracked thunder as he led his followers off in a fury to form a new settlement.
+
+“Uh, you guys going to be back before night?” Boshel whimpered. 
+
+“Oh, get to Hell out of here.” Michael roared. 
+
+“Keep the little oaf!” Helel snorted. “He hasn’t enough brimstone in him to set fire to an outhouse.”
+
+The two great hosts separated, and Boshel was left alone in the void. He was still standing there when there was a second little jerk and time began in earnest, bursting the pod into a shower of sparks that traveled and grew. He was still standing there when the sparks acquired form and spin; and he stood there yet when life began to appear on the soot specks thrown off from the sparks. He stood there quite a long, long time.
+
+“What are we going to do with the little bugger?” an underling asked Michael. “We can’t have him fouling up the landscape forever.”
+
+“I’ll go ask,” said Mike, and he did. 
+
+But Michael was told that the responsibility was his; that Boshel would have to be punished for his hesitancy; and that it was up to Michael to select the suitable punishment and see that it was carried out.
+
+“You know, he made time itself stutter at the start,” Mike told the underling. “He set up a random that affected everything. It’s got to be a punishment with something to do with time.”
+
+“You got any ideas?” the underling asked. 
+
+“I’ll think of something,” Michael said. Quite a while after this, Michael was thumbing through a book one afternoon at a news-stand in Los Angeles.
+
+“It says here,” Michael intoned, “that if six monkeys were set down to six typewriters and typed for a long enough time, they would type all the words of Shakespeare exactly. Time is something we’ve got plenty of. Let’s try it, Kitabel, and see how long it takes.”
+
+“What’s a monkey, Michael?” 
+
+“I don’t know.” 
+
+“What’s a typewriter?” 
+
+“I don’t know.” 
+
+“What’s a Shakespeare, Mike?” 
+
+“Anybody can ask questions, Kitabel. Get the things together and let’s get the project started.”
+
+“It sounds like a lengthy project. Who will oversee it?” 
+
+“Boshel. It’s a natural for him. It will teach him patience and a sense of order, and impress on him the majesty of time. It’s exactly the punishment I’ve been looking for.”
+
+They got the things together and turned them over to Boshel. 
+
+“As soon as the project is finished, Bosh, your period of waiting will be over. Then you can join the group and enjoy yourself with the rest of us.”
+
+“Well, it’s better than standing here doing nothing,” Boshel said. “It’d go faster if I could educate the monkeys and let them copy it.” 
+
+“No, the typing has to be random, Bosh. It was you who introduced the random factor into the universe. So, suffer for it.”
+
+“Any particular edition the copy has to correspond to?” 
+
+“The ‘Blackstone Readers’ Edition Thirty-Seven and a half Volumes in One that I have here in my hand will do fine,” Michael said. “I’ve had a talk with the monkeys, and they’re willing to stick with it. It took me eighty thousand years just to get them where they could talk, but that’s nothing when we’re talking about time.” 
+
+“Man, are we ever talking about Time!” Boshel moaned. 
+
+“I made a deal with the monkeys. They will be immune to fatigue and boredom. I cannot promise the same for you.”
+
+“Uh, Michael, since it may be quite a while, I wonder if I could have some sort of clock to keep track of how fast things are going.”
+
+So Michael made him a clock. It was a cube of dressed stone measuring a parsec on each edge.
+
+“You don’t have to wind it, you don’t have to do a thing to it. Bosh,” Michael explained. “A small bird will come every millennium and sharpen its beak on this stone. You can tell the passing of time by the diminishing of the stone. It’s a good clock, and it has only one moving part, the bird. I will not guarantee that your project will be finished by the time the entire stone is worn away, but you will be able to tell that time has passed.”
+
+“It’s better than nothing,” Boshel said, “but it’s going to be a drag. I think this concept of time is a little Mediaeval, though.”
+
+“So am I,” Michael said. “I tell you what I can do, though, Bosh. I can chain you to that stone and have another large bird dive-bomb you and gouge out hunks of your liver. That was in a story in another book on that news-stand.”
+
+“You slay me, Mike. That won’t be necessary. I’ll pass the time somehow.” 
+
+Boshel set the monkeys to work. They were conditioned to punch the typewriters at random. Within a short period of time (as the Larger Creatures count time) the monkeys had produced whole Shakespearian words: ‘Let’ which is found in scene two of act one of Richard ID; ‘Go’ which is in scene two of act two of Julius Caesar; and ‘Be’ which occurs in the very first scene and act of the Tempest. Boshel was greatly encouraged.
+
+Some time after this, one of the monkeys produced two Shakespearian words in succession. By this time, the home world of Shakespeare (which was also the home world of the news-stand in Los Angeles where was bom a great idea) was long out of business.
+
+After another while, the monkeys had done whole phrases. By then, quite a bit of time had run out.
+
+The trouble with that little bird is that its beak did not seem to need much sharpening when it did come once every thousand years. Boshel discovered that Michael had played a dirty seraphic trick on him and had been feeding the bird entirely on bland custard. The bird would take two or three light swipes at the stone, and then be off for another thousand years. Yet, after no more than a thousand visitations, there was an unmistakable scratch on the stone. It was a hopeful sign.
+
+Boshel began to see that the thing could be done. A monkey—and not the most brilliant of them—finally produced a whole sentence: “What say’st thou bully-rook?” And at that very moment another thing happened. It was surprising to Boshel, for it was the first time he had ever seen it. But he would see it milliards of times before it was finished.
+
+A speck of cosmic dust, on the far out reaches of space, met another speck. This should not have been unusual; specks were always meeting specks. But this case was different. Each speck—in the opposite direction— had been the outmost in the whole cosmos. You can’t get farther apart than that. The speck (a teeming conglomerate of peopled worlds) looked at the other speck with eyes and instruments, and saw its own eyes and instruments looking back at it. What the speck saw was itself. The cosmic tetra-dimensionate sphere had been completed. The first speck had met itself coming from the other direction, and space had been transversed.
+
+Then it all collapsed. 
+
+The stars went out, one by one, and billion by billion. Nightmares of falling! All the darkened orbs and oblates fell down into the void that was all bottom. There was nothing left but one tight pod in the void, and a few out of context things like Michael and his associates, and Boshel and his monkeys.
+
+Boshel had a moment of unease: he had become used to the appearance of the expanding universe. But he need not have been uneasy. It began all over again.
+
+A few billion centuries ticked by silently. Once more, the pod burst into a shower of sparks that traveled and grew. They acquired form and spin, and life appeared again on the soot specks thrown off from those sparks.
+
+This happened again and again. Each cycle seemed damnably long while it was happening; but in retrospect, the cycles were only like a light blinking on and off.
+
+And in the Longer Retrospect, they were like a high-frequency alternator, producing a dizzy number of such cycles every over-second, and continuing for tumbling ages. Yet Boshel was becoming bored. There was just no other word for it.
+
+When only a few billion cosmic cycles had been completed, there was a gash in the clock-rock that you could hide a horse in. The little bird made very many journeys back to sharpen its beak. And Pithekos Pete, the most rapid of the monkeys, had now random-written the Tempest, complete and perfect. They shook hands all around, monkeys and angel. It was something of a moment.
+
+The moment did not last. Pete, instead of pecking at furious random to produce the rest of the plays, wrote his own improved version of the Tempest. Boshel was furious.
+
+“But it’s better, Bosh,” Pete protested. “And I have some ideas about stage-craft that will really set this thing up.”
+
+“Of course it’s better! We don’t want them better. We want them just the same. Can’t you monkeys realize that we are working out a problem of random probabilities? Oh, you clunker-heads!” “Let me have that damned book for a month, Bosh, and I’ll copy the plagued things off and we’ll be finished,” Pithekos Pete suggested.
+
+“Rules, you lunk-heads, rules!” Boshel grated out. “We have to abide by the rules. You know that isn’t allowed, and besides it would be found out. I have reason to suspect, and it cuts me to say this, that one of my own monkeys and associates here present is an informer. We’d never get by with it.”
+
+After the brief misunderstanding, things went better. The monkeys stayed with their task. And after a number of cycles expressed by nine followed by zeros in pica type sufficient to stretch around the universe at a period just prior to its collapse (the radius and the circumference of the ultimate sphere are, of course, the same), the first complete version was ready.
+
+It was faulty, of course, and it had to be rejected. But there were less than thirty thousand errors in it; it presaged great things to come, and ultimate triumph.
+
+Later (People, was it ever later!) they had it quite close. By the time that the gash in the clock-rock would hold a medium-sized solar system, they had a version with only five errors.
+
+“It will come,” Boshel said. “It will come in time. And time is the one thing we have plenty of.”
+
+Later—much, much later—they seemed to have it perfect; and by this time, the bird had worn away nearly a fifth of the bulk of the great stone with its millennial visits.
+
+Michael himself read the version and could find no error. This was not conclusive, of course, for Michael was an impatient and hurried reader. Three readings were required for verification, but never was hope so high.
+
+It passed the second reading, by a much more careful angel, and was pronounced letter-perfect. But it was later at night when that reader had finished it, and he may have gotten a little careless at the end.
+
+And it passed the third reading, through all the thirty-seven plays of it, and into the poems at the end. This was Kitabel, the scribing angel himself, who was appointed to that third reading. He was just about to sign the certification when he paused. 
+
+“There is something sticking in my mind,” he said, and he shook his head to clear it. “There is something like an echo that is not quite right. I wouldn’t want to make a mistake.”
+
+He had written ‘Kitab—’, but he had not finished his signature. 
+
+“I won’t be able to sleep tonight if I don’t think of it,” he complained. “It wasn’t in the plays; I know that they were perfect. It was something in the poems—quite near the end—some dissonance. Either the bard wrote a remarkably malapropos line, or there was an error in the transcription that my eye overlooked but my ear remembered. I acknowledge that I was sleepy near the end.”
+
+“Oh, by all the worlds that were ever made, sign!” pleaded Boshel. 
+
+“You have waited this long, a moment more won’t kill you, Bosh.” 
+
+“Don’t bet on it, Kit. I’m about to blow, I tell you.” 
+
+But Kitabel went back and he found it—a verse in the Phoenix and the Turtle: 
+   ‘From this session interdict
+    Every fowl of tyrant wing, 
+    Save the eagle, feather’d king: 
+    Keep the obsequy so strict.’ 
+
+That is what the book itself said. And what Pithekos Pete had written was nearly, but not quite, the same thing:
+   ‘From this session interdict
+    Every fowl of tyrant wingg, 
+    Save the eaggle, feather’d kingg: 
+    Dam machine the g is sticked.’ 
+
+And if you never saw an angel cry, words cannot describe to you the show that Boshel put on then.
+
+They are still at it tonight, typing away at random, for that last sad near-victory was less than a million billion cycles ago. And only a moment ago—half way back in the present cycle—one of the monkeys put together no less than nine Shakespearian words in a row.
+
+There is still hope. And the bird has now worn the rock down to about half its bulk.
+
+(https://archive.org/stream/Fantastic_v20n02_1970-12/)</string>
+                       </property>
+                       <property name="wordWrap">
+                         <bool>true</bool>
+                       </property>
+                       <property name="textInteractionFlags">
+                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                       </property>
+                     </widget>
+                   </item>
+                 </layout>
+               </widget>
+             </widget>
+           </item>
+         </layout>
        </item>
       </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="copyrightLabel">
-       <property name="cursor">
-        <cursorShape>IBeamCursor</cursorShape>
-       </property>
-       <property name="text">
-        <string notr="true">Copyright &amp;copy; 2009-YYYY The Bitcoin Core developers</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::RichText</enum>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="copyrightLabel2">
-       <property name="cursor">
-        <cursorShape>IBeamCursor</cursorShape>
-       </property>
-       <property name="text">
-        <string notr="true">Copyright &amp;copy; 2014-YYYY The Gapcoin Core developers</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::RichText</enum>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="cursor">
-        <cursorShape>IBeamCursor</cursorShape>
-       </property>
-       <property name="text">
-        <string>
-This is experimental software.
-
-Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Ok</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
+     </widget>
+     <widget class="QWidget" name="tabJohnFrey">
+      <attribute name="title">
+       <string>John Allen Frey</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="para1Label">
+         <property name="cursor">
+          <cursorShape>IBeamCursor</cursorShape>
+         </property>
+         <property name="text">
+          <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;John (Jonny) Allen Frey 1991 - 2017&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Gifted mathematician and developer of Gapcoin.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_4a">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../bitcoin.qrc">:/images/john_frey</pixmap>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>
  <resources>
-  <include location="../bitcoin.qrc"/>
+  <include location="../bitcoin.qrc" />
  </resources>
  <connections>
   <connection>

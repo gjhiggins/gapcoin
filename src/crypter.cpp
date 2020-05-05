@@ -83,7 +83,6 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
 
     vchPlaintext = CKeyingMaterial(nPLen);
 
-//    EVP_CIPHER_CTX ctx;
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
 
     bool fOk = true;

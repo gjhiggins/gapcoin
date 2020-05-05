@@ -80,6 +80,10 @@ TransactionView::TransactionView(QWidget *parent) :
                                   TransactionFilterProxy::TYPE(TransactionRecord::SendToOther));
     typeWidget->addItem(tr("To yourself"), TransactionFilterProxy::TYPE(TransactionRecord::SendToSelf));
     typeWidget->addItem(tr("Mined"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
+    // FIXME
+    // typeWidget->addItem(tr("Notary"), TransactionFilterProxy::TYPE(TransactionRecord::Notary) |
+    //                             TransactionFilterProxy::TYPE(TransactionRecord::NotarySendToAddress) |
+    //                             TransactionFilterProxy::TYPE(TransactionRecord::NotarySendToOther));
     typeWidget->addItem(tr("Other"), TransactionFilterProxy::TYPE(TransactionRecord::Other));
 
     hlayout->addWidget(typeWidget);
@@ -189,6 +193,12 @@ void TransactionView::setModel(WalletModel *model)
         transactionView->setColumnWidth(TransactionTableModel::Type, TYPE_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Amount, AMOUNT_MINIMUM_COLUMN_WIDTH);
 
+// FIXME
+#if QT_VERSION < 0x050000
+    // transactionView->horizontalHeader()->setResizeMode(TransactionTableModel::BRICSpeech, QHeaderView::Stretch);
+#else
+    // transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::BRICSpeech, QHeaderView::Stretch);
+#endif
         columnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(transactionView, AMOUNT_MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH);
 
         if (model->getOptionsModel())

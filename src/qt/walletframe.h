@@ -15,7 +15,8 @@ class WalletModel;
 class WalletView;
 class BlockExplorer;
 class MiningPage;
-// class NewsPage;
+class RecordsPage;
+class NotaryPage;
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -57,10 +58,12 @@ public slots:
     void gotoHistoryPage();
 	/** Switch to explorer page */
     void gotoBlockExplorerPage();	
+    /** Switch to records page */
+    void gotoRecordsPage();
 	/** Switch to mining page */
     void gotoMiningPage();	
-    /** Switch to news page */
-    // void gotoNewsPage();
+	/** Switch to notary page */
+    void gotoNotaryPage();	
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

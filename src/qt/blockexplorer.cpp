@@ -12,7 +12,27 @@
 #include "bitcoinunits.h"
 #include "clientmodel.h"
 
+static PoWUtils *powUtils = new PoWUtils();
+
 extern double GetDifficulty(const CBlockIndex* blockindex = NULL);
+
+/*
+double GetDifficulty(const CBlockIndex* blockindex)
+{
+    // Floating point number that is a multiple of the minimum difficulty,
+    if (blockindex == NULL)
+    {
+        if (chainActive.Tip() == NULL)
+            return powUtils->get_readable_difficulty(TestNet() ? PoWUtils::min_test_difficulty : PoWUtils::min_difficulty);
+        else
+            blockindex = chainActive.Tip();
+    }
+
+    return powUtils->get_readable_difficulty(blockindex->nDifficulty);
+}
+*/
+
+static PoWUtils *utils = new PoWUtils();
 
 inline std::string utostr(unsigned int n)
 {
@@ -168,7 +188,7 @@ const CBlockIndex* getexplorerBlockIndex(int64_t height)
 std::string getexplorerBlockHash(int64_t Height)
 {
     
-    std::string genesisblockhash = "00000b7e804f0de87e7752550ff04d7686a4599509897feefd7f03904eb45633";
+    std::string genesisblockhash = "e798f3ae4f57adcf25740fe43100d95ec4fd5d43a1568bc89e2b25df89ff6cb0";
     CBlockIndex* pindexBest = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
     if((Height < 0) || (Height > pindexBest->nHeight)) { return genesisblockhash; }
 
@@ -219,6 +239,25 @@ std::string BlockToString(CBlockIndex* pBlock)
     else
         Generated = GetBlockValue(pBlock->nHeight - 1, 0, block.nDifficulty);
 
+    uint256 hash = block.GetHash();
+    std::vector<uint8_t> vHash(hash.begin(), hash.end());
+    PoW pow(&vHash, block.nShift, &block.nAdd, block.nDifficulty);
+
+    std::vector<uint8_t> vStart, vEnd;
+    pow.get_gap(&vStart, &vEnd);
+
+    std::vector<uint8_t> vDifficulty(block.nAdd.begin(), block.nAdd.end());
+
+    // insert 0 a the begining to avoid sig problems
+    vDifficulty.push_back(0);
+    vStart.push_back(0);
+    vEnd.push_back(0);
+
+    CBigNum bnTarget, bnStart, bnEnd;
+    bnTarget.setvch(vDifficulty);
+    bnStart.setvch(vStart);
+    bnEnd.setvch(vEnd);
+
     std::string BlockContentCells[] =
     {
         _("Height"),      itostr(pBlock->nHeight),
@@ -231,6 +270,12 @@ std::string BlockToString(CBlockIndex* pBlock)
         _("Difficulty"),  strprintf("%.4f", GetDifficulty(pBlock)),
         _("Difficulty"),  utostr(block.nDifficulty),
         _("Nonce"),       utostr(block.nNonce),
+        _("Shift"),       utostr((uint64_t)block.nShift),
+        _("Adder"),       bnTarget.ToString(),
+        _("Gapstart"),    bnStart.ToString(),
+        _("Gapend"),      bnEnd.ToString(),
+        _("Gaplen"),      utostr(pow.gap_len()),
+        _("Merit"),       utostr(utils->get_readable_difficulty(pow.merit())),
         _("Version"),     itostr(block.nVersion),
         _("Hash"),        "<pre>" + block.GetHash().GetHex() + "</pre>",
         _("Merkle Root"), "<pre>" + block.hashMerkleRoot.GetHex() + "</pre>",

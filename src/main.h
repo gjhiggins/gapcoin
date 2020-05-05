@@ -74,6 +74,11 @@ static const int MAX_BLOCKS_IN_TRANSIT_PER_PEER = 128;
 /** Timeout in seconds before considering a block download peer unresponsive. */
 static const unsigned int BLOCK_DOWNLOAD_TIMEOUT = 60;
 
+/** Number bytes a transaction comment is allowed to have */
+static const unsigned int MAX_TX_COMMENT_LEN = 140; // 128 bytes + little extra
+/** Fees smaller than this (in satoshi) are considered zero fee (for transaction creation) */
+static const int64_t MIN_TX_FEE = 10000;
+
 #ifdef USE_UPNP
 static const int fHaveUPnP = true;
 #else
@@ -178,6 +183,7 @@ bool GetTransaction(const uint256 &hash, CTransaction &tx, uint256 &hashBlock, b
 bool ActivateBestChain(CValidationState &state);
 int64_t GetBlockValue(int nHeight, int64_t nFees, uint64_t nDifficulty);
 uint64_t GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock);
+CBlockIndex* FindBlockByHeight(int nHeight);
 
 void UpdateTime(CBlockHeader& block, const CBlockIndex* pindexPrev);
 

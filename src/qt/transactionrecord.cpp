@@ -37,6 +37,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     uint256 hash = wtx.GetHash();
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
+    // FIXME
+    // std::string bricoleurspeech = "";
+    // if (!wtx.strBRICSpeech.empty())
+    // {
+    //    bricoleurspeech = wtx.strBRICSpeech;
+    // }
+
     if (nNet > 0 || wtx.IsCoinBase())
     {
         //
@@ -48,6 +55,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             {
                 TransactionRecord sub(hash, nTime);
                 CTxDestination address;
+                // FIXME
+                // sub.bricoleurspeech = clamspeech;
                 sub.idx = parts.size(); // sequence number
                 sub.credit = txout.nValue;
                 if (ExtractDestination(txout.scriptPubKey, address) && IsMine(*wallet, address))
@@ -87,6 +96,16 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             // Payment to self
             int64_t nChange = wtx.GetChange();
 
+            // FIXME
+            // TransactionRecord sub(hash, nTime, TransactionRecord::SendToSelf, "",
+            //                  -(nDebit - nChange), nCredit - nChange, bricoleurspeech);
+            // if (bricoleurspeech.length() == 71 && clamspeech.compare(0, 7, "notary ") == 0) {
+            //     sub.type = TransactionRecord::Notary;
+            // } else if (bricoleurspeech.length() >= 79 && clamspeech.compare(0, 15, "create clamour ") == 0) {
+            //     sub.type = TransactionRecord::CreateBricoleurour;
+            // }
+            // parts.append(sub);
+
             parts.append(TransactionRecord(hash, nTime, TransactionRecord::SendToSelf, "",
                             -(nDebit - nChange), nCredit - nChange));
         }
@@ -102,6 +121,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 const CTxOut& txout = wtx.vout[nOut];
                 TransactionRecord sub(hash, nTime);
                 sub.idx = parts.size();
+                // FIXME
+                // sub.bricoleurspeech = clamspeech;
 
                 if(wallet->IsMine(txout))
                 {
@@ -116,12 +137,18 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     // Sent to Bitcoin Address
                     sub.type = TransactionRecord::SendToAddress;
                     sub.address = CBitcoinAddress(address).ToString();
+                    // FIXME
+                    // if (bricoleurspeech.length() == 71 && clamspeech.compare(0, 7, "notary ") == 0)
+                    //     sub.type = TransactionRecord::NotarySendToAddress;
                 }
                 else
                 {
                     // Sent to IP, or other non-address transaction like OP_EVAL
                     sub.type = TransactionRecord::SendToOther;
                     sub.address = mapValue["to"];
+                    // FIXME
+                    // if (bricoleurspeech.length() == 71 && clamspeech.compare(0, 7, "notary ") == 0)
+                    //     sub.type = TransactionRecord::NotarySendToOther;
                 }
 
                 int64_t nValue = txout.nValue;
@@ -141,6 +168,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             //
             // Mixed debit transaction, can't break down payees
             //
+            // FIXME
+            // TransactionRecord sub(hash, nTime, TransactionRecord::Other, "", nNet, 0, bricoleurspeech);
+            // if (bricoleurspeech.length() == 71 && clamspeech.compare(0, 7, "notary ") == 0)
+            //     sub.type = TransactionRecord::Notary;
             parts.append(TransactionRecord(hash, nTime, TransactionRecord::Other, "", nNet, 0));
         }
     }

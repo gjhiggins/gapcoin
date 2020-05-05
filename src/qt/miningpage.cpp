@@ -1,5 +1,6 @@
 #include "miningpage.h"
 #include "ui_miningpage.h"
+#include "init.h"
 #include "main.h"
 #include "miner.h"
 #include "util.h"
@@ -12,9 +13,80 @@
 #include <boost/config.hpp>
 #include <stdio.h>
 #include <memory>
+#include <cmath>
+
 #include <QDebug>
 
 extern json_spirit::Value GetNetworkHashPS(int lookup, int height);
+
+static QString formatTimeInterval(CBigNum t)
+{
+    enum  EUnit { YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, NUM_UNITS };
+
+    const int SecondsPerUnit[NUM_UNITS] =
+    {
+        31556952, // average number of seconds in gregorian year
+        31556952/12, // average number of seconds in gregorian month
+        24*60*60, // number of seconds in a day
+        60*60, // number of seconds in an hour
+        60, // number of seconds in a minute
+        1
+    };
+
+    const char* UnitNames[NUM_UNITS] =
+    {
+        "year",
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "second"
+    };
+
+    if (t > 0xFFFFFFFF)
+    {
+        t /= SecondsPerUnit[YEAR];
+        return QString("%1 years").arg(t.ToString(10).c_str());
+    }
+    else
+    {
+        unsigned int t32 = t.getuint();
+
+        int Values[NUM_UNITS];
+        for (int i = 0; i < NUM_UNITS; i++)
+        {
+            Values[i] = t32/SecondsPerUnit[i];
+            t32 %= SecondsPerUnit[i];
+        }
+
+        int FirstNonZero = 0;
+        while (FirstNonZero < NUM_UNITS && Values[FirstNonZero] == 0)
+            FirstNonZero++;
+
+        QString TimeStr;
+        for (int i = FirstNonZero; i < std::min(FirstNonZero + 3, (int)NUM_UNITS); i++)
+        {
+            int Value = Values[i];
+            TimeStr += QString("%1 %2%3 ").arg(Value).arg(UnitNames[i]).arg((Value == 1)? "" : "s"); // FIXME: this is English specific
+        }
+        return TimeStr;
+    }
+}
+
+static QString formatHashrate(int64_t n)
+{
+    if (n == 0)
+        return "0 Primes/s";
+
+    int i = (int)floor(log(n)/log(1000));
+    float v = n*pow(1000.0f, -i);
+
+    QString prefix = "";
+    if (i >= 1 && i < 9)
+        prefix = " kMGTPEZY"[i];
+
+    return QString("%1 %2Primes/s").arg(v, 0, 'f', 2).arg(prefix);
+}
 
 MiningPage::MiningPage(QWidget *parent) :
     QWidget(parent),
@@ -23,19 +95,28 @@ MiningPage::MiningPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int nThreads = boost::thread::hardware_concurrency();
-
-    int nUseThreads = GetArg("-genproclimit", -1);
-    if (nUseThreads < 0)
+    nThreads = boost::thread::hardware_concurrency();
+    maxGenProc = GetArg("-genproclimit", -1);
+    if (maxGenProc < 0)
          nUseThreads = nThreads;
+    else
+        nUseThreads = maxGenProc;
 
     ui->sliderCores->setMinimum(0);
     ui->sliderCores->setMaximum(nThreads);
     ui->sliderCores->setValue(nUseThreads);
     ui->labelNCores->setText(QString("%1").arg(nUseThreads));
 
+    isMining = GetBoolArg("-gen", false)? 1 : 0;
     connect(ui->sliderCores, SIGNAL(valueChanged(int)), this, SLOT(changeNumberOfCores(int)));
     connect(ui->pushSwitchMining, SIGNAL(clicked()), this, SLOT(switchMining()));
+
+    QValidator *headershiftValuevalidator = new QIntValidator(14, 512, this);
+    ui->headershiftValue->setValidator(headershiftValuevalidator);
+    QValidator *sievesizeValuevalidator = new QIntValidator(1000, 33554432, this);
+    ui->sievesizeValue->setValidator(sievesizeValuevalidator);
+    QValidator *sieveprimesValuevalidator = new QIntValidator(1000, 900000, this);
+    ui->sieveprimesValue->setValidator(sieveprimesValuevalidator);
 
     // setup Plot
     // create graph
@@ -80,7 +161,7 @@ MiningPage::MiningPage(QWidget *parent) :
 
     // give the axes some labels:
     ui->diffplot_hashrate->xAxis->setLabel(tr("Block height"));
-    ui->diffplot_hashrate->yAxis->setLabel(tr("Hashrate MH/s"));
+    ui->diffplot_hashrate->yAxis->setLabel(tr("Hashrate MPrimes/s"));
 
     // set the pens
     //a13469, 6c3d94
@@ -104,8 +185,8 @@ MiningPage::MiningPage(QWidget *parent) :
     ui->diffplot_hashrate->xAxis->setNumberPrecision(0);
     ui->diffplot_hashrate->yAxis->setSubTickCount(0);
 
-    updateUI();
-    startTimer(1500);
+    updateUI(isMining);
+    startTimer(8000);
 }
 
 MiningPage::~MiningPage()
@@ -123,28 +204,47 @@ void MiningPage::setClientModel(ClientModel *model)
     this->clientModel = model;
 }
 
-void MiningPage::updateUI()
+void MiningPage::updateUI(bool fGenerate)
 {
-    int nThreads = boost::thread::hardware_concurrency();
-
-    int nUseThreads = GetArg("-genproclimit", -1);
-    if (nUseThreads < 0)
-        nUseThreads = nThreads;
-
-
     ui->labelNCores->setText(QString("%1").arg(nUseThreads));
-    ui->pushSwitchMining->setText(GetBoolArg("-gen", false)? tr("Stop mining") : tr("Start mining"));
+    ui->sliderCores->setValue(nUseThreads);
+    ui->pushSwitchMining->setText(fGenerate? tr("Stop mining") : tr("Start mining"));
+
+    CBlockIndex* pindexBest = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
+    int64_t Hashrate = (int64_t)dHashesPerSec;
+    int64_t NetworkHashrate = GetNetworkHashPS(120, -1).get_int64();
+    ui->labelYourHashrate->setText(formatHashrate(Hashrate));
+    ui->labelNethashrate->setText(formatHashrate(NetworkHashrate));
+    // clientModel->setMining(fGenerate, dHashesPerSec);
+
+    QString NextBlockTime;
+    if (Hashrate == 0)
+        NextBlockTime = QChar(L'∞');
+    else
+    {
+        CBigNum Target;
+        Target.SetCompact(pindexBest->nDifficulty);
+        CBigNum ExpectedTime = (CBigNum(1) << 256)/(Target*Hashrate);
+        NextBlockTime = formatTimeInterval(ExpectedTime);
+    }
+    ui->labelNextBlock->setText(NextBlockTime);
+
+    QString status = QString("Not Mining Gapcoin");
+    if (fGenerate)
+        status = QString("Mining with %1 threads, shift: %2, sieve size: %3, number of primes in sieve: %4 - hashrate: %5 (%6 tests per sec.)")
+            .arg(nUseThreads).arg(nMiningShift).arg(nMiningSieveSize).arg(nMiningPrimes).arg(formatHashrate(Hashrate)).arg(dTestsPerSec);
+    ui->miningStatistics->setText(status);
 }
 
-void MiningPage::restartMining(bool fGenerate)
+void MiningPage::restartMining(bool fGenerate, int nThreads)
 {
-    int nThreads = ui->sliderCores->value();
-
-    mapArgs["-genproclimit"] = QString("%1").arg(nThreads).toUtf8().data();
+    isMining = fGenerate;
+    if (nThreads <= maxGenProc)
+        nUseThreads = nThreads;
 
     // unlock wallet before mining
 
-#ifndef __linux__
+  #ifndef __linux__
     if (fGenerate && !hasMiningprivkey && !unlockContext.get())
     {
         this->unlockContext.reset(new WalletModel::UnlockContext(model->requestUnlock()));
@@ -154,28 +254,37 @@ void MiningPage::restartMining(bool fGenerate)
             return;
         }
     }
-#endif
+  #endif
 
-    json_spirit::Array Args;
-    Args.push_back(fGenerate);
-    Args.push_back(nThreads);
-    setgenerate(Args, false);
+    nMiningShift = ui->headershiftValue->text().toInt();
+    nMiningSieveSize = ui->sievesizeValue->text().toInt();
+    nMiningPrimes = ui->sieveprimesValue->text().toInt();
+    clientModel->setMining(fGenerate, dHashesPerSec);
+    GenerateGapcoins(fGenerate, pwalletMain, nUseThreads);
 
     // lock wallet after mining
     if (!fGenerate && !hasMiningprivkey)
         unlockContext.reset(nullptr);
 
-    updateUI();
+    updateUI(fGenerate);
 }
 
 void MiningPage::changeNumberOfCores(int i)
 {
-    restartMining(GetBoolArg("-gen", false));
+    restartMining(isMining, i);
 }
 
 void MiningPage::switchMining()
 {
-    restartMining(!GetBoolArg("-gen", false));
+    restartMining(!isMining, ui->sliderCores->value());
+}
+
+void MiningPage::updateSievePrimes(int i)
+{
+
+    sievesizeValue = pow(2, i);
+    qDebug() << "New header shift: " << QString("%1").arg(i) << ", new sieve size value: " << QString("%1").arg(sievesizeValue);
+    ui->sievesizeValue->setText(QString("%1").arg(sievesizeValue));
 }
 
 void MiningPage::updatePlot(int count)
@@ -262,102 +371,7 @@ void MiningPage::updatePlot(int count)
     lastUpdate = GetTime();
 }
 
-static QString formatTimeInterval(CBigNum t)
-{
-    enum  EUnit { YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, NUM_UNITS };
-
-    const int SecondsPerUnit[NUM_UNITS] =
-    {
-        31556952, // average number of seconds in gregorian year
-        31556952/12, // average number of seconds in gregorian month
-        24*60*60, // number of seconds in a day
-        60*60, // number of seconds in an hour
-        60, // number of seconds in a minute
-        1
-    };
-
-    const char* UnitNames[NUM_UNITS] =
-    {
-        "year",
-        "month",
-        "day",
-        "hour",
-        "minute",
-        "second"
-    };
-
-    if (t > 0xFFFFFFFF)
-    {
-        t /= SecondsPerUnit[YEAR];
-        return QString("%1 years").arg(t.ToString(10).c_str());
-    }
-    else
-    {
-        unsigned int t32 = t.getuint();
-
-        int Values[NUM_UNITS];
-        for (int i = 0; i < NUM_UNITS; i++)
-        {
-            Values[i] = t32/SecondsPerUnit[i];
-            t32 %= SecondsPerUnit[i];
-        }
-
-        int FirstNonZero = 0;
-        while (FirstNonZero < NUM_UNITS && Values[FirstNonZero] == 0)
-            FirstNonZero++;
-
-        QString TimeStr;
-        for (int i = FirstNonZero; i < std::min(FirstNonZero + 3, (int)NUM_UNITS); i++)
-        {
-            int Value = Values[i];
-            TimeStr += QString("%1 %2%3 ").arg(Value).arg(UnitNames[i]).arg((Value == 1)? "" : "s"); // FIXME: this is English specific
-        }
-        return TimeStr;
-    }
-}
-
-static QString formatHashrate(int64_t n)
-{
-    if (n == 0)
-        return "0 H/s";
-
-    int i = (int)floor(log(n)/log(1000));
-    float v = n*pow(1000.0f, -i);
-
-    QString prefix = "";
-    if (i >= 1 && i < 9)
-        prefix = " kMGTPEZY"[i];
-
-    cout << "Hashformat prefix: " << prefix.toStdString() ;
-
-    return QString("%1 %2H/s").arg(v, 0, 'f', 2).arg(prefix);
-}
-
 void MiningPage::timerEvent(QTimerEvent *)
 {
-    // qDebug() << "qDebug MiningPage timerEvent";
-    CBlockIndex* pindexBest = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
-
-    // int64 NetworkHashrate = GetNetworkGhps(120, -1).get_int64();
-    // int64 NetworkHashrate = GetNetworkHashPS(120, -1).get_int64();
-    int64_t NetworkHashrate = GetNetworkHashPS(120, -1).get_int64();
-    // qint64 NetworkHashrate = (qint64)GetNetworkHashPS(120, -1).get_int64();
-
-    int64_t Hashrate = GetBoolArg("-gen", false)? (int64_t)dHashesPerSec : 0;
-    return ;
-
-    QString NextBlockTime;
-    if (Hashrate == 0)
-        NextBlockTime = QChar(L'∞');
-    else
-    {
-        CBigNum Target;
-        Target.SetCompact(pindexBest->nDifficulty);
-        CBigNum ExpectedTime = (CBigNum(1) << 256)/(Target*Hashrate);
-        NextBlockTime = formatTimeInterval(ExpectedTime);
-    }
-
-    ui->labelNethashrate->setText(formatHashrate(NetworkHashrate));
-    ui->labelYourHashrate->setText(formatHashrate(Hashrate));
-    ui->labelNextBlock->setText(NextBlockTime);
+    updateUI(isMining);
 }

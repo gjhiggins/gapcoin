@@ -1470,11 +1470,20 @@ void UpdateTime(CBlockHeader& block, const CBlockIndex* pindexPrev)
         block.nDifficulty = GetNextWorkRequired(pindexPrev, &block);
 }
 
-
-
-
-
-
+CBlockIndex* FindBlockByHeight(int nHeight)
+{
+    std::string genesisblockhash = "e798f3ae4f57adcf25740fe43100d95ec4fd5d43a1568bc89e2b25df89ff6cb0";
+    CBlockIndex* pindexBest = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
+    if((nHeight < 0) || (nHeight > pindexBest->nHeight)) {
+        uint256 hash(genesisblockhash);
+        return mapBlockIndex[hash];
+    }
+    CBlock block;
+    CBlockIndex* pblockindex =  mapBlockIndex[chainActive.Tip()->GetBlockHash()];
+    while (pblockindex->nHeight > nHeight)
+        pblockindex = pblockindex->pprev;
+    return mapBlockIndex[pblockindex->GetBlockHash()];
+}
 
 
 

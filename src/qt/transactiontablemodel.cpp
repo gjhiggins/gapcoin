@@ -363,6 +363,12 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Payment to yourself");
     case TransactionRecord::Generated:
         return tr("Mined");
+    // FIXME
+    // case TransactionRecord::Notary:
+    //     return tr("Notary");
+    // case TransactionRecord::NotarySendToAddress:
+    // case TransactionRecord::NotarySendToOther:
+    //    return tr("Notary, Sent to");
     default:
         return QString();
     }
@@ -379,6 +385,9 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx
         return QIcon(":/icons/tx_input");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
+    // FIXME
+    // case TransactionRecord::NotarySendToAddress:
+    // case TransactionRecord::NotarySendToOther:
         return QIcon(":/icons/tx_output");
     default:
         return QIcon(":/icons/tx_inout");
@@ -394,15 +403,44 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         return QString::fromStdString(wtx->address);
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::SendToAddress:
+    //FIXME
+    // case TransactionRecord::NotarySendToAddress:
     case TransactionRecord::Generated:
         return lookupAddress(wtx->address, tooltip);
     case TransactionRecord::SendToOther:
+    // FIXME
+    // case TransactionRecord::NotarySendToOther:
         return QString::fromStdString(wtx->address);
     case TransactionRecord::SendToSelf:
     default:
         return tr("(n/a)");
     }
 }
+
+// FIXME
+// QString TransactionTableModel::formatBRICSpeech(const TransactionRecord *wtx, bool tooltip) const
+// {
+//     switch(wtx->type)
+//     {
+//     case TransactionRecord::RecvFromOther:
+//         return QString::fromStdString(wtx->bricoleurspeech);
+//     case TransactionRecord::RecvWithAddress:
+//         return QString::fromStdString(wtx->bricoleurspeech);
+//     case TransactionRecord::SendToAddress:
+//         return QString::fromStdString(wtx->bricoleurspeech);
+//     case TransactionRecord::SendToOther:
+//         return QString::fromStdString(wtx->bricoleurspeech);
+//     case TransactionRecord::SendToSelf:
+//     case TransactionRecord::Notary:
+//     case TransactionRecord::NotarySendToAddress:
+//     case TransactionRecord::NotarySendToOther:
+//         return QString::fromStdString(wtx->bricoleurspeech);
+//     case TransactionRecord::Generated:
+//          return "";
+//       default:
+//         return tr("(n/a)");
+//     }
+// }
 
 QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
 {
@@ -412,6 +450,9 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
+    // FIXME
+    // case TransactionRecord::Notary:
+    // case TransactionRecord::NotarySendToAddress:
         {
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
         if(label.isEmpty())
@@ -479,6 +520,9 @@ QString TransactionTableModel::formatTooltip(const TransactionRecord *rec) const
     QString tooltip = formatTxStatus(rec) + QString("\n") + formatTxType(rec);
     if(rec->type==TransactionRecord::RecvFromOther || rec->type==TransactionRecord::SendToOther ||
        rec->type==TransactionRecord::SendToAddress || rec->type==TransactionRecord::RecvWithAddress)
+       // FIXME
+       // rec->type==TransactionRecord::SendToAddress || rec->type==TransactionRecord::RecvWithAddress ||
+       // rec->type==TransactionRecord::NotarySendToAddress || rec->type==TransactionRecord::NotarySendToOther)
     {
         tooltip += QString(" ") + formatTxToAddress(rec, true);
     }
@@ -513,6 +557,9 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxToAddress(rec, false);
         case Amount:
             return formatTxAmount(rec);
+        // FIXME
+        // case BRICSpeech:
+        //      return formatBRICSpeech(rec, false);
         }
         break;
     case Qt::EditRole:
@@ -529,6 +576,9 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxToAddress(rec, true);
         case Amount:
             return rec->credit + rec->debit;
+        // FIXME
+        // case BRICSpeech:
+        //     return formatBRICSpeech(rec, false);
         }
         break;
     case Qt::ToolTipRole:
@@ -601,6 +651,9 @@ QVariant TransactionTableModel::headerData(int section, Qt::Orientation orientat
                 return tr("Destination address of transaction.");
             case Amount:
                 return tr("Amount removed from or added to balance.");
+            // FIXME
+            // case BRICSpeech:
+            //     return tr("Transaction comment.");
             }
         }
     }

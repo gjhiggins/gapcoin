@@ -178,6 +178,12 @@ public:
 
     UnlockContext requestUnlock();
 
+    // Search for a proof-of-existence
+    void searchNotaryTx(uint256 hash);
+
+    // Create a proof-of-existence
+    void sendNotaryTx(std::string hash);
+
     bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
     bool isSpent(const COutPoint& outpoint) const;
@@ -240,6 +246,11 @@ signals:
     // Show progress dialog e.g. for rescan
     void showProgress(const QString &title, int nProgress);
 
+    // Notary search results
+    void notarySearchComplete(std::vector<std::pair<std::string, int> > txResults);
+
+    // Notary transaction ID
+    void notaryTxSent(std::string txID, std::string txError);
 public slots:
     /* Wallet status might have changed */
     void updateStatus();

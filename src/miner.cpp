@@ -434,6 +434,8 @@ void static GapcoinMiner(CWallet *pwallet, uint64_t nThread, uint64_t numThreads
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("gapcoin-miner");
 
+    LogPrintf("GapcoinMiner params: nMiningPrimes=%lld, nMiningSieveSize=%lld, nMiningShift=%lld.\n",
+        nMiningPrimes, nMiningSieveSize, nMiningShift);
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;

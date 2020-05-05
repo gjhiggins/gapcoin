@@ -246,6 +246,13 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         CWalletTx *newTx = transaction.getTransaction();
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
+
+        // FIXME
+       	// std::string strNotarisation = notarisation.toStdString();
+        // if (!strNotarisation.empty())
+        //     strTxNotarisationStr = "notary:" + strNotarisation;
+        // bool fCreated = wallet->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason, strTxNotarisationStr, coinControl);
+
         bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, strFailReason, coinControl);
         transaction.setTransactionFee(nFeeRequired);
 
@@ -523,6 +530,21 @@ void WalletModel::UnlockContext::CopyFrom(const UnlockContext& rhs)
     // Transfer context; old object no longer relocks wallet
     *this = rhs;
     rhs.relock = false;
+}
+
+void WalletModel::searchNotaryTx(uint256 hash)
+{
+    std::vector<std::pair<std::string, int> > txResults;
+    wallet->SearchNotaryTransactions(hash, txResults);
+    emit notarySearchComplete(txResults);
+}
+
+void WalletModel::sendNotaryTx(std::string hash)
+{
+    CWalletTx wtx;
+    std::string prefix = "notary";
+    std::string txError = wallet->SendNotary(wtx, hash, prefix);
+    emit notaryTxSent(wtx.GetHash().GetHex(), txError);
 }
 
 bool WalletModel::getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
