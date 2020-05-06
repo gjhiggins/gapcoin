@@ -1009,6 +1009,13 @@ void ClearDatadirCache()
               boost::filesystem::path());
 }
 
+boost::filesystem::path GetPrimeGapRecordsFile()
+{
+    boost::filesystem::path pathConfigFile(GetArg("-records", "gaprecords.csv"));
+    if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
+    return pathConfigFile;
+}
+
 boost::filesystem::path GetConfigFile()
 {
     boost::filesystem::path pathConfigFile(GetArg("-conf", "gapcoin.conf"));

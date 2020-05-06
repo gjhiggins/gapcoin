@@ -1,12 +1,13 @@
 /****************************************************************************
 ****************************************************************************/
 
-#include "recordspage.h"
-#include "ui_recordspage.h"
-#include "init.h"
-#include "main.h"
-#include "util.h"
-#include "bitcoingui.h"
+#include <qt/recordspage.h>
+#include <qt/forms/ui_recordspage.h>
+#include <init.h>
+#include <main.h>
+#include <util.h>
+#include <qt/guiutil.h>
+#include <qt/bitcoingui.h>
 
 #include <QtWidgets>
 #include <QDialog>
@@ -23,21 +24,26 @@ RecordsPage::RecordsPage(QWidget *parent) :
     ui->setupUi(this);
 
     csvModel = new QStandardItemModel(this);
-    csvModel->setColumnCount(8);
+    csvModel->setColumnCount(9);
     csvModel->setHorizontalHeaderLabels(
-        QStringList() << "height" << "difficulty" << "shift" << "adder" << "gapsize" << "merit" << "digits" << "startprime");
+        QStringList() << "height" << "date" << "difficulty" << "shift" << "adder" << "gapsize" << "merit" << "digits" << "startprime");
     ui->tableView->setModel(csvModel);
     ui->tableView->setColumnWidth(0, 60); // height
-    ui->tableView->setColumnWidth(2, 50); // shift
-    ui->tableView->setColumnWidth(3, 160); // adder
-    ui->tableView->setColumnWidth(4, 50); // gapsize
-    ui->tableView->setColumnWidth(5, 50); // merit
-    ui->tableView->setColumnWidth(6, 50); // primedigits
-    ui->tableView->setColumnWidth(7, 200);
+    ui->tableView->setColumnWidth(1, 80); // date
+    ui->tableView->setColumnWidth(3, 50); // shift
+    ui->tableView->setColumnWidth(4, 160); // adder
+    ui->tableView->setColumnWidth(5, 50); // gapsize
+    ui->tableView->setColumnWidth(6, 50); // merit
+    ui->tableView->setColumnWidth(7, 50); // primedigits
+    ui->tableView->setColumnWidth(8, 200);
  
-    // Open the file from the resources. Instead of the file
-    // Need to specify the path to your desired file
-    QFile file("gaprecords.csv");
+    // Prefer gaprecords data in datadir
+    boost::filesystem::path datadirGapRecordsPath = GetDataDir() / "gaprecords.csv";
+    QString datadirGapRecords(GUIUtil::boostPathToQString(datadirGapRecordsPath));
+    // otherwise default to gaprecords data in the resources.
+    QString resourceGapRecords(":/data/gaprecords");
+    QFile file(QFile::exists(datadirGapRecords)? datadirGapRecords : resourceGapRecords);
+
     if ( !file.open(QFile::ReadOnly | QFile::Text) ) {
         qDebug() << "File does not exist.";
     } else {

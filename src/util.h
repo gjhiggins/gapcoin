@@ -184,6 +184,7 @@ bool RenameOver(boost::filesystem::path src, boost::filesystem::path dest);
 bool TryCreateDirectory(const boost::filesystem::path& p);
 boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
+boost::filesystem::path GetPrimeGapRecordsFile();
 boost::filesystem::path GetConfigFile();
 boost::filesystem::path GetPidFile();
 std::string HashToString(unsigned char* hash, int n);
