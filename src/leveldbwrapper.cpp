@@ -12,7 +12,7 @@
 #include <leveldb/filter_policy.h>
 #include <memenv.h>
 
-void HandleError(const leveldb::Status &status) throw(leveldb_error) {
+void HandleError(const leveldb::Status &status) {
     if (status.ok())
         return;
     LogPrintf("%s\n", status.ToString());
@@ -32,6 +32,11 @@ static leveldb::Options GetOptions(size_t nCacheSize) {
     options.filter_policy = leveldb::NewBloomFilterPolicy(10);
     options.compression = leveldb::kNoCompression;
     options.max_open_files = 64;
+    if (leveldb::kMajorVersion > 1 || (leveldb::kMajorVersion == 1 && leveldb::kMinorVersion >= 16)) {
+        // LevelDB versions before 1.16 consider short writes to be corruption. Only trigger error
+        // on corruption in later versions.
+        options.paranoid_checks = true;
+    }
     return options;
 }
 
@@ -70,7 +75,7 @@ CLevelDBWrapper::~CLevelDBWrapper() {
     options.env = NULL;
 }
 
-bool CLevelDBWrapper::WriteBatch(CLevelDBBatch &batch, bool fSync) throw(leveldb_error) {
+bool CLevelDBWrapper::WriteBatch(CLevelDBBatch &batch, bool fSync) {
     leveldb::Status status = pdb->Write(fSync ? syncoptions : writeoptions, &batch.batch);
     HandleError(status);
     return true;
