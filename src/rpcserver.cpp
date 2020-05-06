@@ -316,8 +316,8 @@ static const CRPCCommand vRPCCommands[] =
 
     /* Utility functions */
     { "createmultisig",         &createmultisig,         true,      true ,      false },
-    { "linearizehashes",        &linearizehashes,        false,     false,      false },
     { "makekeypair",            &makekeypair,            false,     false,      false },
+    { "dumpbootstrap",          &dumpbootstrap,          false,     false,      false },
     { "validateaddress",        &validateaddress,        true,      false,      false }, /* uses wallet if enabled */
     { "verifymessage",          &verifymessage,          false,     false,      false },
 

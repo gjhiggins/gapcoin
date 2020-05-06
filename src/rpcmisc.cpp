@@ -16,6 +16,9 @@
 #endif
 
 #include <stdint.h>
+#include <iostream>
+#include <fstream>
+#include <boost/format.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -374,25 +377,19 @@ Value makekeypair(const Array& params, bool fHelp)
 
     return result;
 }
-/*
+
 Value dumpbootstrap(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 3)
         throw runtime_error(
-            "dumpbootstrap <destination> <endblock> [startblock=0]\n"
-            "Creates a bootstrap format block dump of the blockchain in destination, which can be a directory or a path with filename, up to the given endblock number.\n"
+            "dumpbootstrap <destination>\n"
+            "Creates a bootstrap format block dump of the blockchain in destination, which can be a directory or a path with filename, up to 1200000.\n"
             "Optional <startblock> is the first block number to dump.");
 
     string strDest = params[0].get_str();
-    int nEndBlock = params[1].get_int();
-    if (nEndBlock < 0 || nEndBlock > nBestHeight)
-        throw runtime_error("End block number out of range.");
-
+    
+    int nEndBlock = 1200000; // params[1].get_int();
     int nStartBlock = 0;
-    if (params.size() > 2)
-        nStartBlock = params[2].get_int();
-    if (nStartBlock < 0 || nStartBlock > nEndBlock)
-        throw runtime_error("Start block number out of range.");
 
     boost::filesystem::path pathDest(strDest);
     if (boost::filesystem::is_directory(pathDest))
@@ -407,15 +404,13 @@ Value dumpbootstrap(const Array& params, bool fHelp)
         if (!fileout)
             throw JSONRPCError(-1, "Error: Could not open bootstrap file for writing.");
 
-        unsigned char pchMessageStart[4];
-        GetMessageStart(pchMessageStart, true);
-
-        for (int nHeight = nStartBlock; nHeight <= nEndBlock; nHeight++)
+        CBlockIndex* pblockindex = chainActive[nStartBlock];
+        while (pblockindex->nHeight < nEndBlock)
         {
             CBlock block;
-            CBlockIndex* pblockindex = FindBlockByHeight(nHeight);
-            block.ReadFromDisk(pblockindex, true);
-            fileout << FLATDATA(pchMessageStart) << fileout.GetSerializeSize(block) << block;
+            ReadBlockFromDisk(block, pblockindex);
+            fileout << FLATDATA(Params().MessageStart()) << fileout.GetSerializeSize(block) << block;
+            pblockindex = chainActive.Next(pblockindex);
         }
 
     } catch(const boost::filesystem::filesystem_error &e) {
@@ -423,55 +418,4 @@ Value dumpbootstrap(const Array& params, bool fHelp)
     }
 
     return "bootstrap file created";
-}
-*/
-
-Value linearizehashes(const Array& params, bool fHelp)
-{
-    if (fHelp || params.size() < 1 || params.size() > 3)
-        throw runtime_error(
-            "linearizehashes <destination> <endblock>  [startblock=0]\n"
-            "Creates a dump of linearized block hashes in destination, which can be a directory or a path with filename, up to the given endblock number.\n"
-            "Optional <startblock> is the first block number to dump.");
-
-    string strDest = params[0].get_str();
-
-    int nEndBlock = 1646900; // 3rd Feb 2019
-    if (params.size() > 1)
-        nEndBlock = params[1].get_int();
-    if (nEndBlock < 0 || nEndBlock > chainActive.Height())
-        throw runtime_error("End block number out of range.");
-
-    int nStartBlock = 0;
-    if (params.size() > 2)
-        nStartBlock = params[2].get_int();
-    if (nStartBlock < 0 || nStartBlock > nEndBlock)
-        throw runtime_error("Start block number out of range.");
-
-    boost::filesystem::path pathDest(strDest);
-    if (boost::filesystem::is_directory(pathDest))
-        pathDest /= "hashlist.txt";
-
-    try {
-        FILE* file = fopen(pathDest.string().c_str(), "w");
-        if (!file)
-            throw JSONRPCError(-1, "Error: Could not open output file for writing.");
-
-        CAutoFile fileout = CAutoFile(file, SER_DISK, CLIENT_VERSION);
-        if (!fileout)
-            throw JSONRPCError(-1, "Error: Could not open output file for writing.");
-
-        for (int nHeight = nStartBlock; nHeight <= nEndBlock; nHeight++)
-        {
-            CBlock block;
-            CBlockIndex* pblockindex = FindBlockByHeight(nHeight);
-            ReadBlockFromDisk(block, pblockindex);
-            std::string blockhash = block.GetHash().ToString().c_str();
-            fileout << blockhash.append("\n");
-        }
-    } catch(const boost::filesystem::filesystem_error &e) {
-        throw JSONRPCError(-1, "Error: Linearized hash dump failed!");
-    }
-
-    return "file of linearized hashes created";
 }
