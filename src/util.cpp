@@ -1068,12 +1068,12 @@ void CreatePidFile(const boost::filesystem::path &path, pid_t pid)
 }
 #endif
 
-string HashToString(unsigned char* hash,int n) {
-    char outputBuffer[2*n+1];
-    for(int i=0;i<n;i++) {
+string HashToString(unsigned char* hash) {
+    char outputBuffer[65];
+    for(int i=0;i<32;i++) {
         sprintf(outputBuffer+(i*2),"%02x",hash[i]);
     }
-    outputBuffer[2*n]=0;
+    outputBuffer[64]=0;
     return string(outputBuffer);
 }
 

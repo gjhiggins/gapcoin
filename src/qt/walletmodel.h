@@ -142,6 +142,8 @@ public:
         StatusCode status;
     };
 
+    // prepare Notary transaction for getting txfee before sending coins
+    SendCoinsReturn prepareNotaryTransaction(WalletModelTransaction &transaction, std::string txmessage, const CCoinControl *coinControl = NULL);
     // prepare transaction for getting txfee before sending coins
     SendCoinsReturn prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl = NULL);
 

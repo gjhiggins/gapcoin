@@ -192,13 +192,6 @@ void TransactionView::setModel(WalletModel *model)
         transactionView->setColumnWidth(TransactionTableModel::Date, DATE_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Type, TYPE_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Amount, AMOUNT_MINIMUM_COLUMN_WIDTH);
-
-// FIXME
-#if QT_VERSION < 0x050000
-    // transactionView->horizontalHeader()->setResizeMode(TransactionTableModel::BRICSpeech, QHeaderView::Stretch);
-#else
-    // transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::BRICSpeech, QHeaderView::Stretch);
-#endif
         columnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(transactionView, AMOUNT_MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH);
 
         if (model->getOptionsModel())

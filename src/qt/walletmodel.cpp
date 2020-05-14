@@ -165,6 +165,12 @@ bool WalletModel::validateAddress(const QString &address)
 
 WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl)
 {
+    std::string txmessage = "";
+    return prepareNotaryTransaction(transaction, txmessage, coinControl);
+}
+
+WalletModel::SendCoinsReturn WalletModel::prepareNotaryTransaction(WalletModelTransaction &transaction, std::string txmessage, const CCoinControl *coinControl)
+{
     qint64 total = 0;
     QList<SendCoinsRecipient> recipients = transaction.getRecipients();
     std::vector<std::pair<CScript, int64_t> > vecSend;
@@ -219,6 +225,29 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             total += rcp.amount;
         }
     }
+
+    if ( txmessage.length() )
+    {
+        // std::string strmsg = txmessage.toStdString();
+        // const char *msg = strmsg.c_str();
+        const char *msg = txmessage.c_str();
+        CScript scriptMsg;
+        std::vector<unsigned char> vMsg;
+        unsigned int i;
+        for ( i = 0; i < std::strlen(msg); ++ i )
+            vMsg.push_back(msg[i]);
+
+        std::string address = recipients[0].address.toStdString();
+        const char *addressstr = address.c_str();
+        std::vector<unsigned char> vAdd;
+
+        for ( i = 0; i < std::strlen(addressstr); ++ i )
+            vAdd.push_back(addressstr[i]);
+
+        scriptMsg << OP_RETURN << vMsg << OP_RETURN << vAdd;
+        vecSend.push_back(make_pair(scriptMsg, CENT));
+    }
+
     if(setAddress.size() != nAddresses)
     {
         return DuplicateAddress;
@@ -246,13 +275,6 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         CWalletTx *newTx = transaction.getTransaction();
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
-
-        // FIXME
-       	// std::string strNotarisation = notarisation.toStdString();
-        // if (!strNotarisation.empty())
-        //     strTxNotarisationStr = "notary:" + strNotarisation;
-        // bool fCreated = wallet->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason, strTxNotarisationStr, coinControl);
-
         bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, strFailReason, coinControl);
         transaction.setTransactionFee(nFeeRequired);
 
@@ -534,19 +556,16 @@ void WalletModel::UnlockContext::CopyFrom(const UnlockContext& rhs)
 
 void WalletModel::searchNotaryTx(uint256 hash)
 {
-    // FIXME
-    // std::vector<std::pair<std::string, int> > txResults;
-    // wallet->SearchNotaryTransactions(hash, txResults);
-    // emit notarySearchComplete(txResults);
+    std::vector<std::pair<std::string, int> > txResults;
+    wallet->SearchNotaryTransactions(hash, txResults);
+    emit notarySearchComplete(txResults);
 }
 
 void WalletModel::sendNotaryTx(std::string hash)
 {
-    // FIXME
-    // CWalletTx wtx;
-    // std::string prefix = "notary";
-    // std::string txError = wallet->SendNotary(wtx, hash, prefix);
-    // emit notaryTxSent(wtx.GetHash().GetHex(), txError);
+    CWalletTx wtx;
+    std::string txError = wallet->SendNotaryTransaction(wtx, hash);
+    emit notaryTxSent(wtx.GetHash().GetHex(), txError);
 }
 
 bool WalletModel::getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const

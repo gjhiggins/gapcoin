@@ -164,7 +164,7 @@ std::string NotaryPage::hashFile(std::string fileName)
         SHA256_Update(&sha256, buffer, bytesRead);
     }
     SHA256_Final(hashSha, &sha256);
-    std::string notaryID = HashToString(hashSha, SHA256_DIGEST_LENGTH);
+    std::string notaryID = HashToString(hashSha);
     LogPrintf("NotaryPage::hashFile: hash of file: %s\n", notaryID);
 
     fclose(file);
