@@ -83,4 +83,5 @@ echo "db4 build complete."
 echo
 echo 'When compiling gapcoin, run `./configure` in the following way:'
 echo
-echo '  ./configure <configure options> LIBS="-L`pwd`/contrib/db4/lib" CXXFLAGS="-I `pwd`/contrib/db4/include"
+echo '  ./configure <configure options> LIBS="-L`pwd`/contrib/db4/lib" CXXFLAGS="-I `pwd`/contrib/db4/include"'
+
