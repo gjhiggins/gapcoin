@@ -83,7 +83,7 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     x = BN_CTX_get(ctx);
     if (!BN_copy(x, order)) { ret=-1; goto err; }
     if (!BN_mul_word(x, i)) { ret=-1; goto err; }
-    
+
     ECDSA_SIG_get0(ecsig, &ecsig_r, &ecsig_s);
 
     if (!BN_add(x, x, ecsig_r)) { ret=-1; goto err; }
@@ -175,7 +175,7 @@ public:
         if (d2i_ECPrivateKey(&pkey, &pbegin, privkey.size())) {
             if(fSkipCheck)
                 return true;
-            
+
             // d2i_ECPrivateKey returns true if parsing succeeds.
             // This doesn't necessarily mean the key is valid.
             if (EC_KEY_check_key(pkey))
@@ -436,17 +436,17 @@ bool CKey::Load(CPrivKey &privkey, CPubKey &vchPubKey, bool fSkipCheck=false) {
     CECKey key;
     if (!key.SetPrivKey(privkey, fSkipCheck))
         return false;
-    
+
     key.GetSecretBytes(vch);
     fCompressed = vchPubKey.IsCompressed();
     fValid = true;
-    
+
     if (fSkipCheck)
         return true;
-    
+
     if (GetPubKey() != vchPubKey)
         return false;
-    
+
     return true;
 }
 
