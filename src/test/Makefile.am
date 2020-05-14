@@ -44,6 +44,7 @@ test_gapcoin_SOURCES = \
   Checkpoints_tests.cpp \
   compress_tests.cpp \
   DoS_tests.cpp \
+  ecies_tests.cpp \
   getarg_tests.cpp \
   key_tests.cpp \
   main_tests.cpp \
