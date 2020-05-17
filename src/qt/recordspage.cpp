@@ -9,7 +9,7 @@
 #include <qt/guiutil.h>
 #include <qt/bitcoingui.h>
 
-#include <QtWidgets>
+#include <QDebug>
 #include <QDialog>
 #include <QFile>
 #include <QTextStream>

@@ -16,6 +16,8 @@
 #include <cmath>
 
 #include <QDebug>
+#include <QValidator>
+#include <QIntValidator>
 
 extern json_spirit::Value GetNetworkHashPS(int lookup, int height);
 

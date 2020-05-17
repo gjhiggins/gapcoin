@@ -19,7 +19,7 @@ class RecordsPage : public QDialog
     Q_OBJECT
 
   public:
-    explicit RecordsPage(QWidget *parent = Q_NULLPTR);
+    explicit RecordsPage(QWidget *parent);
     ~RecordsPage();
 
 
