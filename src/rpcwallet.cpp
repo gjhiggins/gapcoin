@@ -216,8 +216,8 @@ Value setaccount(const Array& params, bool fHelp)
             "1. \"gapcoinaddress\"  (string, required) The gapcoin address to be associated with an account.\n"
             "2. \"account\"         (string, required) The account to assign the address to.\n"
             "\nExamples:\n"
-            + HelpExampleCli("setaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"tabby\"")
-            + HelpExampleRpc("setaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"tabby\"")
+            + HelpExampleCli("setaccount", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" \"tabby\"")
+            + HelpExampleRpc("setaccount", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\", \"tabby\"")
         );
 
     CBitcoinAddress address(params[0].get_str());
@@ -254,8 +254,8 @@ Value getaccount(const Array& params, bool fHelp)
             "\nResult:\n"
             "\"accountname\"        (string) the account address\n"
             "\nExamples:\n"
-            + HelpExampleCli("getaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
-            + HelpExampleRpc("getaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
+            + HelpExampleCli("getaccount", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\"")
+            + HelpExampleRpc("getaccount", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\"")
         );
 
     CBitcoinAddress address(params[0].get_str());
@@ -306,7 +306,7 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 5)
         throw runtime_error(
-            "sendtoaddress \"gapcoinaddress\" amount ( \"comment\" \"comment-to\"  \"tx-comment\")\n"
+            "sendtoaddress \"gapcoinaddress\" amount ( \"comment\" \"comment-to\"  \"notaryID\")\n"
             "\nSent an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
@@ -317,14 +317,14 @@ Value sendtoaddress(const Array& params, bool fHelp)
             "4. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
             "                             to which you're sending the transaction. This is not part of the \n"
             "                             transaction, just kept in your wallet.\n"
-            "5. \"tx-comment\"  (string, optional) A notarisation string to be permanently preserved as part \n"
+            "5. \"notaryID\"  (string, optional) A notarisation string to be permanently preserved as part \n"
             "                             of the blockchain \n"
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1")
-            + HelpExampleCli("sendtoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"donation\" \"seans outpost\"")
-            + HelpExampleRpc("sendtoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, \"donation\", \"seans outpost\"")
+            + HelpExampleCli("sendtoaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 0.1")
+            + HelpExampleCli("sendtoaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 0.1 \"donation\" \"seans outpost\"")
+            + HelpExampleRpc("sendtoaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\", 0.1, \"donation\", \"seans outpost\"")
         );
 
     CBitcoinAddress address(params[0].get_str());
@@ -342,17 +342,17 @@ Value sendtoaddress(const Array& params, bool fHelp)
         wtx.mapValue["to"]      = params[3].get_str();
 
      // Transaction comment
-    std::string bricoleurspeech;
+    std::string notaryID;
     if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
     {
-        bricoleurspeech = params[4].get_str();
-        if (bricoleurspeech.length() > MAX_TX_COMMENT_LEN)
-            bricoleurspeech.resize(MAX_TX_COMMENT_LEN);
+        notaryID = params[4].get_str();
+        if (notaryID.length() > MAX_TX_COMMENT_LEN)
+            notaryID.resize(MAX_TX_COMMENT_LEN);
      }
 
     EnsureWalletIsUnlocked();
 
-    string strError = pwalletMain->SendMoneyToDestination(address.Get(), nAmount, wtx);
+    string strError = pwalletMain->SendMoneyToDestination(address.Get(), nAmount, wtx, notaryID);
     if (strError != "")
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
 
@@ -422,11 +422,11 @@ Value signmessage(const Array& params, bool fHelp)
             "\nUnlock the wallet for 30 seconds\n"
             + HelpExampleCli("walletpassphrase", "\"mypassphrase\" 30") +
             "\nCreate the signature\n"
-            + HelpExampleCli("signmessage", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"my message\"") +
+            + HelpExampleCli("signmessage", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" \"my message\"") +
             "\nVerify the signature\n"
-            + HelpExampleCli("verifymessage", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"signature\" \"my message\"") +
+            + HelpExampleCli("verifymessage", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" \"signature\" \"my message\"") +
             "\nAs json rpc\n"
-            + HelpExampleRpc("signmessage", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"my message\"")
+            + HelpExampleRpc("signmessage", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\", \"my message\"")
         );
 
     EnsureWalletIsUnlocked();
@@ -470,13 +470,13 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
             "amount   (numeric) The total amount in GAP received at this address.\n"
             "\nExamples:\n"
             "\nThe amount from transactions with at least 1 confirmation\n"
-            + HelpExampleCli("getreceivedbyaddress", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"") +
+            + HelpExampleCli("getreceivedbyaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\"") +
             "\nThe amount including unconfirmed transactions, zero confirmations\n"
-            + HelpExampleCli("getreceivedbyaddress", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" 0") +
+            + HelpExampleCli("getreceivedbyaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 0") +
             "\nThe amount with at least 6 confirmation, very safe\n"
-            + HelpExampleCli("getreceivedbyaddress", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" 6") +
+            + HelpExampleCli("getreceivedbyaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 6") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("getreceivedbyaddress", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", 6")
+            + HelpExampleRpc("getreceivedbyaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\", 6")
        );
 
     // Gapcoin address
@@ -743,7 +743,7 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 7)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"togapcoinaddress\" amount ( minconf \"comment\" \"comment-to\" \"tx-comment\")\n"
+            "sendfrom \"fromaccount\" \"togapcoinaddress\" amount ( minconf \"comment\" \"comment-to\" \"notaryID\")\n"
             "\nSent an amount from an account to a gapcoin address.\n"
             "The amount is a real and is rounded to the nearest 0.00000001."
             + HelpRequiringPassphrase() + "\n"
@@ -757,17 +757,17 @@ Value sendfrom(const Array& params, bool fHelp)
             "6. \"comment-to\"        (string, optional) An optional comment to store the name of the person or organization \n"
             "                                     to which you're sending the transaction. This is not part of the transaction, \n"
             "                                     it is just kept in your wallet.\n"
-            "7. \"tx-comment\"        (string, optional) A notarisation string to be permanently preserved as part \n"
+            "7. \"notaryID\"        (string, optional) A notarisation string to be permanently preserved as part \n"
             "                                     of the blockchain \n"
             "\nResult:\n"
             "\"transactionid\"        (string) The transaction id.\n"
             "\nExamples:\n"
             "\nSend 0.01 GAP from the default account to the address, must have at least 1 confirmation\n"
-            + HelpExampleCli("sendfrom", "\"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.01") +
+            + HelpExampleCli("sendfrom", "\"\" \"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 0.01") +
             "\nSend 0.01 from the tabby account to the given address, funds must have at least 6 confirmations\n"
-            + HelpExampleCli("sendfrom", "\"tabby\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.01 6 \"donation\" \"seans outpost\"") +
+            + HelpExampleCli("sendfrom", "\"tabby\" \"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 0.01 6 \"donation\" \"seans outpost\"") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("sendfrom", "\"tabby\", \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.01, 6, \"donation\", \"seans outpost\"")
+            + HelpExampleRpc("sendfrom", "\"tabby\", \"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\", 0.01, 6, \"donation\", \"seans outpost\"")
         );
 
     string strAccount = AccountFromValue(params[0]);
@@ -786,12 +786,12 @@ Value sendfrom(const Array& params, bool fHelp)
     if (params.size() > 5 && params[5].type() != null_type && !params[5].get_str().empty())
         wtx.mapValue["to"]      = params[5].get_str();
 
-    std::string bricoleurspeech;
+    std::string notaryID;
     if (params.size() > 6 && params[6].type() != null_type && !params[6].get_str().empty())
     {
-        bricoleurspeech = params[6].get_str();
-        if (bricoleurspeech.length() > MAX_TX_COMMENT_LEN)
-            bricoleurspeech.resize(MAX_TX_COMMENT_LEN);
+        notaryID = params[6].get_str();
+        if (notaryID.length() > MAX_TX_COMMENT_LEN)
+            notaryID.resize(MAX_TX_COMMENT_LEN);
     }
 
     EnsureWalletIsUnlocked();
@@ -802,7 +802,7 @@ Value sendfrom(const Array& params, bool fHelp)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
     // Send
-    string strError = pwalletMain->SendMoneyToDestination(address.Get(), nAmount, wtx);
+    string strError = pwalletMain->SendMoneyToDestination(address.Get(), nAmount, wtx, notaryID);
     if (strError != "")
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
 
@@ -814,7 +814,7 @@ Value sendmany(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\"  \"tx-comment\" )\n"
+            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\"  \"notaryID\" )\n"
             "\nSend multiple times. Amounts are double-precision floating point numbers."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
@@ -826,18 +826,18 @@ Value sendmany(const Array& params, bool fHelp)
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
             "4. \"comment\"             (string, optional) A comment\n"
-            "5. \"tx-comment\"          (string, optional) A notarisation string to be permanently preserved as part \n"
+            "5. \"notaryID\"          (string, optional) A notarisation string to be permanently preserved as part \n"
             "                                     of the blockchain \n"
             "\nResult:\n"
             "\"transactionid\"          (string) The transaction id for the send. Only 1 transaction is created regardless of \n"
             "                                    the number of addresses.\n"
             "\nExamples:\n"
             "\nSend two amounts to two different addresses:\n"
-            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\"") +
+            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\"") +
             "\nSend two amounts to two different addresses setting the confirmation and comment:\n"
-            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\" 6 \"testing\"") +
+            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\" 6 \"testing\"") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("sendmany", "\"tabby\", \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\", 6, \"testing\"")
+            + HelpExampleRpc("sendmany", "\"tabby\", \"{\\\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\", 6, \"testing\"")
         );
 
     string strAccount = AccountFromValue(params[0]);
@@ -847,13 +847,13 @@ Value sendmany(const Array& params, bool fHelp)
         nMinDepth = params[2].get_int();
 
     CWalletTx wtx;
-    std::string strBRICSpeech;
+    std::string notaryID;
 
     wtx.strFromAccount = strAccount;
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
         wtx.mapValue["comment"] = params[3].get_str();
     if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
-        strBRICSpeech = params[4].get_str();
+        notaryID = params[4].get_str();
 
     set<CBitcoinAddress> setAddress;
     vector<pair<CScript, int64_t> > vecSend;
@@ -888,7 +888,7 @@ Value sendmany(const Array& params, bool fHelp)
     CReserveKey keyChange(pwalletMain);
     int64_t nFeeRequired = 0;
     string strFailReason;
-    bool fCreated = pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason);
+    bool fCreated = pwalletMain->CreateNotaryTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason, notaryID);
     if (!fCreated)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
     if (!pwalletMain->CommitTransaction(wtx, keyChange))
@@ -923,9 +923,9 @@ Value addmultisigaddress(const Array& params, bool fHelp)
 
             "\nExamples:\n"
             "\nAdd a multisig address from 2 addresses\n"
-            + HelpExampleCli("addmultisigaddress", "2 \"[\\\"16sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\\\",\\\"171sgjn4YtPu27adkKGrdDwzRTxnRkBfKV\\\"]\"") +
+            + HelpExampleCli("addmultisigaddress", "2 \"[\\\"GQE3hMaBz1uCCMATzXGfYK13A8PjqxKxz6\\\",\\\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\\\"]\"") +
             "\nAs json rpc call\n"
-            + HelpExampleRpc("addmultisigaddress", "2, \"[\\\"16sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\\\",\\\"171sgjn4YtPu27adkKGrdDwzRTxnRkBfKV\\\"]\"")
+            + HelpExampleRpc("addmultisigaddress", "2, \"[\\\"GQE3hMaBz1uCCMATzXGfYK13A8PjqxKxz6\\\",\\\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\\\"]\"")
         ;
         throw runtime_error(msg);
     }
@@ -1458,7 +1458,6 @@ Value listsinceblock(const Array& params, bool fHelp)
     return ret;
 }
 
-/* FIXME
 Value getnotarytransaction(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
@@ -1471,48 +1470,58 @@ Value getnotarytransaction(const Array& params, bool fHelp)
     uint256 hash;
     string strHash;
     if (params.size() > 0) 
-    	strHash = params[0].get_str();
+        strHash = params[0].get_str();
     hash.SetHex(strHash);
 
     bool multipleresults = false;
+
     if (params.size() > 1) {
            multipleresults =  params[1].get_bool();
-   }
+    }
 
     Array notaryinfo;
     bool notaryFound = false;
-    int blockstogoback = chainActive[chainActive.Height() - 250000];
+    int blockstogoback = chainActive.Height() - 250000;
     
-    const CBlockIndex* pindexFirst = chainActive[chainActive.Height();
+    const CBlockIndex* pindexFirst = chainActive.Tip();
     for (int i = 0; pindexFirst && i < blockstogoback; i++)
     {
 
-	CBlock block;
-    	block.ReadFromDisk(pindexFirst, true);
+        CBlock block;
+        ReadBlockFromDisk(block, pindexFirst);
+        std::string reason;
+        std::string opreturnStr;
+        BOOST_FOREACH (const CTransaction& tx, block.vtx)
+        {
+            if ((!IsStandardTx(tx, reason)) && (reason == "scriptpubkey")) {
+                bool hasOpReturn = false;
+                BOOST_FOREACH (const CTxOut& vout, tx.vout) {
+                    if (vout.IsDust(CTransaction::nMinRelayTxFee)) {
+                        std::string scriptpubkeyStr = vout.scriptPubKey.ToString();
+                        std::size_t found = scriptpubkeyStr.find(opreturnStr);
+                        if (found!=std::string::npos) {
+                            hasOpReturn = true;
+                        }
+                    }
+                }
+                if (hasOpReturn) {
+                    Object entry;
+                    notaryFound = true;
+                    entry.push_back(Pair("notaryid", hash.GetHex()));
+                    entry.push_back(Pair("txid", tx.GetHash().GetHex()));
+                    notaryinfo.push_back(entry);
+                }
+           }
+        }
+        if (!multipleresults && notaryFound)    
+            break;
 
-    	BOOST_FOREACH (const CTransaction& tx, block.vtx)
-    	{	
-		if (tx.strBRICSpeech == hash.GetHex()) {
-                Object entry;
-			notaryFound = true;
-			
-			entry.push_back(Pair("notaryid", hash.GetHex()));
-			entry.push_back(Pair("txid", tx.GetHash().GetHex()));
-			
-			notaryinfo.push_back(entry);
-
-		}
-    	}
-			
-	if (!multipleresults && notaryFound)	
-		break;
-
-	pindexFirst = pindexFirst->pprev;
+        pindexFirst = pindexFirst->pprev;
     }
 
     if (!notaryFound) 
-            		throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Notary transaction not found");
-    
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Notary transaction not found");
+
     return notaryinfo; 
 }
 
@@ -1524,9 +1533,7 @@ Value sendnotarytransaction(const Array& params, bool fHelp)
             "<file> is either a file or a string you want to notarize\n"
             + HelpRequiringPassphrase());
 
-    // Wallet comments
     CWalletTx wtx;
-    std::string prefix = "notary";
 
     unsigned char hashSha[SHA256_DIGEST_LENGTH];
     FILE* file=fopen(params[0].get_str().c_str(),"rb");
@@ -1542,19 +1549,18 @@ Value sendnotarytransaction(const Array& params, bool fHelp)
         SHA256_Update(&sha256,buffer,bytesRead);
     }
     SHA256_Final(hashSha,&sha256);
-    std::string nHash = HashToString(hashSha, SHA256_DIGEST_LENGTH);
+    std::string nHash = HashToString(hashSha);
     fclose(file);
 
     if (pwalletMain->IsLocked())
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
 
-    string strError = pwalletMain->SendBRICSpeech(wtx, nHash, prefix);
+    string strError = pwalletMain->SendNotaryTransaction(wtx, nHash);
     if (strError != "")
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
 
     return wtx.GetHash().GetHex();
 }
-*/
 
 Value gettransaction(const Array& params, bool fHelp)
 {
@@ -1791,7 +1797,7 @@ Value walletlock(const Array& params, bool fHelp)
             "\nSet the passphrase for 2 minutes to perform a transaction\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\" 120") +
             "\nPerform a send (requires passphrase set)\n"
-            + HelpExampleCli("sendtoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 1.0") +
+            + HelpExampleCli("sendtoaddress", "\"GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN\" 1.0") +
             "\nClear the passphrase since we are done before 2 minutes is up\n"
             + HelpExampleCli("walletlock", "") +
             "\nAs json rpc call\n"

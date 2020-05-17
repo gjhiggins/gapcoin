@@ -37,13 +37,6 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     uint256 hash = wtx.GetHash();
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
-    // FIXME
-    // std::string bricoleurspeech = "";
-    // if (!wtx.strBRICSpeech.empty())
-    // {
-    //    bricoleurspeech = wtx.strBRICSpeech;
-    // }
-
     if (nNet > 0 || wtx.IsCoinBase())
     {
         //

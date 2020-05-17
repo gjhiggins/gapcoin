@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(compress_amounts)
     BOOST_CHECK(TestPair(         CENT,       0x7));
     BOOST_CHECK(TestPair(         COIN,       0x9));
     BOOST_CHECK(TestPair(      50*COIN,      0x32));
-    BOOST_CHECK(TestPair(42000000*COIN, 0x1406f40));
+    BOOST_CHECK(TestPair(42000000*COIN, 0x280DE80)); // https://github.com/gdrcoin/gdrcoin/blob/f9f2137b3d9069bfc8e3c69c90a684a061dfb6aa/src/test/compress_tests.cpp#L47
 
     for (uint64_t i = 1; i <= NUM_MULTIPLES_UNIT; i++)
         BOOST_CHECK(TestEncode(i));

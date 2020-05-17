@@ -23,7 +23,7 @@
    <item>
     <widget class="QLabel" name="notaryExplanation">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can create a unique notary ID from a file on your computer and embed it in the blockchain. You can use this to later prove that you had access to the data at a certain time.&lt;/p&gt;&lt;p&gt;Use the Notarize and Search buttons below to record a notary ID or search the BRIC blockchain for one.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can create a unique notary ID from a file on your computer and embed it in the blockchain. You can use this to later prove that you had access to the data at a certain time.&lt;/p&gt;&lt;p&gt;Use the Notarize and Search buttons below to record a notary ID or search the GAP blockchain for one.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -101,7 +101,7 @@
        <item>
         <widget class="QPushButton" name="sendNotaryButton">
          <property name="toolTip">
-          <string>Record notary ID in the BRIC blockchain.</string>
+          <string>Record notary ID in the GAP blockchain.</string>
          </property>
          <property name="text">
           <string>Notarize</string>
@@ -111,7 +111,7 @@
        <item>
         <widget class="QPushButton" name="searchNotaryButton">
          <property name="toolTip">
-          <string>Search for notary ID in the BRIC blockchain.</string>
+          <string>Search for notary ID in the GAP blockchain.</string>
          </property>
          <property name="text">
           <string>Search </string>

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>627</width>
+    <width>700</width>
     <height>380</height>
    </rect>
   </property>
@@ -45,7 +45,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_SM">
            <property name="toolTip">
-            <string>The address to sign the message with (e.g. FEyaPwV9xqRkCapaZSfJtrWhkhtyk9ohW1)</string>
+            <string>The address to sign the message with (e.g. GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN)</string>
            </property>
            <property name="maxLength">
             <number>34</number>
@@ -152,7 +152,7 @@
          <item>
           <widget class="QPushButton" name="signMessageButton_SM">
            <property name="toolTip">
-            <string>Sign the message to prove you own this Fuguecoin address</string>
+            <string>Sign the message to prove you own this Gapcoin address</string>
            </property>
            <property name="text">
             <string>Sign &amp;Message</string>
@@ -258,7 +258,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_VM">
            <property name="toolTip">
-            <string>The address the message was signed with (e.g. FEyaPwV9xqRkCapaZSfJtrWhkhtyk9ohW1)</string>
+            <string>The address the message was signed with (e.g. GdRFensrnTCzkoFMX89pLZpwxAawCsoUnN)</string>
            </property>
            <property name="maxLength">
             <number>34</number>
@@ -298,7 +298,7 @@
          <item>
           <widget class="QPushButton" name="verifyMessageButton_VM">
            <property name="toolTip">
-            <string>Verify the message to ensure it was signed with the specified Fuguecoin address</string>
+            <string>Verify the message to ensure it was signed with the specified Gapcoin address</string>
            </property>
            <property name="text">
             <string>Verify &amp;Message</string>
@@ -383,7 +383,7 @@
        <item>
         <widget class="QLabel" name="infoLabel_ED">
          <property name="text">
-          <string>You can encrypt a message using a Fuguecoin address so that only the owner of the address can decrypt it.</string>
+          <string>You can encrypt a message using a Gapcoin pubkey so that only the owner of the corresponding privkey can decrypt it.</string>
          </property>
          <property name="textFormat">
           <enum>Qt::PlainText</enum>
@@ -505,7 +505,7 @@
          <item>
           <widget class="QPushButton" name="encryptMessageButton_ED">
            <property name="toolTip">
-            <string>Encrypt the message with your Fuguecoin address</string>
+            <string>Encrypt the message with your Gapcoin address</string>
            </property>
            <property name="text">
             <string>Encrypt &amp;Message</string>
@@ -590,7 +590,7 @@
        <item>
         <widget class="QLabel" name="infoLabel_DD">
          <property name="text">
-          <string>Enter the Fuguecoin address and the message (ensure you copy line breaks, spaces, tabs, etc. exactly) below to decrypt the message.</string>
+          <string>Enter the Gapcoin address and the message (ensure you copy line breaks, spaces, tabs, etc. exactly) below to decrypt the message.</string>
          </property>
          <property name="textFormat">
           <enum>Qt::PlainText</enum>
@@ -648,7 +648,7 @@
          <item>
           <widget class="QPushButton" name="decryptMessageButton_DD">
            <property name="toolTip">
-            <string>Decrypt the message encrypted with the specified Fuguecoin address</string>
+            <string>Decrypt the message encrypted with the specified Gapcoin address</string>
            </property>
            <property name="text">
             <string>Decrypt &amp;Message</string>

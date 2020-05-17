@@ -48,6 +48,7 @@
         <file alias="news">res/icons/news.png</file>
         <file alias="notary">res/icons/notary.png</file>
         <file alias="debugwindow">res/icons/debugwindow.png</file>
+        <file alias="back">res/icons/back.png</file>
     </qresource>
     <qresource prefix="/data">
         <file alias="gaprecords">res/data/gaprecords.csv</file>

@@ -112,7 +112,7 @@ struct ReadAlerts
 BOOST_FIXTURE_TEST_SUITE(Alert_tests, ReadAlerts)
 
 
-BOOST_AUTO_TEST_CASE(AlertApplies)
+BOOST_AUTO_TEST_CASE(AlertApplies, *boost::unit_test::disabled())
 {
     SetMockTime(11);
 
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(AlertApplies)
 // This uses sh 'echo' to test the -alertnotify function, writing to a
 // /tmp file. So skip it on Windows:
 #ifndef WIN32
-BOOST_AUTO_TEST_CASE(AlertNotify)
+BOOST_AUTO_TEST_CASE(AlertNotify, *boost::unit_test::disabled())
 {
     SetMockTime(11);
 

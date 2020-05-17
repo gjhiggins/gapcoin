@@ -64,6 +64,7 @@ test_gapcoin_SOURCES = \
   scriptnum_tests.cpp \
   sighash_tests.cpp \
   $(JSON_TEST_FILES) $(RAW_TEST_FILES)
+#  ecies_tests.cpp
 
 if ENABLE_WALLET
 test_gapcoin_SOURCES += \

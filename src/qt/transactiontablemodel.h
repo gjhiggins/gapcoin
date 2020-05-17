@@ -30,9 +30,6 @@ public:
         Type = 2,
         ToAddress = 3,
         Amount = 4
-        // FIXME
-        // BRICSpeech = 4,
-        // Amount = 5,
     };
 
     /** Roles to get specific information from a transaction row.
@@ -82,8 +79,6 @@ private:
     QString formatTxType(const TransactionRecord *wtx) const;
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
     QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true) const;
-    // FIXME
-    // QString formatBRICSpeech(const TransactionRecord *wtx, bool tooltip) const;
     QString formatTooltip(const TransactionRecord *rec) const;
     QVariant txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txAddressDecoration(const TransactionRecord *wtx) const;

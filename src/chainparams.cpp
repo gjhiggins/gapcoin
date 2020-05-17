@@ -31,7 +31,7 @@ using namespace boost::assign;
 /* ip seeds */
 unsigned int pnSeed[] =
 {
-  0x9b8fe3d4, 0x52458368, 0x092cd75f, 0xb324fe9b, 0xc0e27fc7,
+  0xca9fc58a, 0xaeac448a, 0xaa393b8b, 0x2b5568ac, 0x2b5868ac, 0xb83ce9c1, 0xfb0f8b25, 0x9d8c4c2d,
 };
 
 class CMainParams : public CChainParams {
@@ -145,6 +145,7 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
+        vSeeds.push_back(CDNSSeedData("testnet-seed", "144.76.118.44"));
 
 #if BOOST_VERSION >= 106000
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);                    // Gapcoin testnet addresses start with 'm' or 'n'

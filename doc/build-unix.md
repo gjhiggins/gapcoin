@@ -89,6 +89,16 @@ for other Ubuntu & Debian:
 	sudo apt-get install libdb4.8-dev
 	sudo apt-get install libdb4.8++-dev
 
+
+
+for Debian Buster:
+
+   sudo apt install build-essential pkg-config libtool autotools-dev autoconf libssl-dev libgmp-dev libmpfr-dev git libboost-all-dev
+
+for GUI under Debian Buster:
+
+   sudo apt install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools protobuf-compiler libprotobuf-dev
+
 Optional:
 
 	sudo apt-get install libminiupnpc-dev (see --with-miniupnpc and --enable-upnp-default)

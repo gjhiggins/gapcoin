@@ -80,8 +80,17 @@ static std::string ScriptToString(const CScript& Script, bool Long = false, bool
         else
             return makeHRef(Address.ToString());
     }
-    else
-        return Long? "<pre>" + Script.ToString() + "</pre>" : _("Non-standard script");
+    else {
+        std::string scriptStr = Script.ToString();
+        if (scriptStr.find(std::string("OP_RETURN ")) != std::string::npos) {
+            std::string decodedpayload = scriptStr.substr(10);
+            vector<unsigned char> parsedhexv = ParseHex(decodedpayload);
+            std::string parsedhex(parsedhexv.begin(), parsedhexv.end());
+            return Long? "<pre><span class='font-weight:bold;'>OP RETURN data: </span>" + parsedhex + "</pre>" : _("Non-standard script");
+        } else {
+            return Long? "<pre>" + scriptStr + "</pre>" : _("Non-standard script");
+        }
+    }
 }
 
 static std::string TimeToString(uint64_t Time)
@@ -297,25 +306,6 @@ std::string BlockToString(CBlockIndex* pBlock)
     Content += ">&nbsp;►</a></h2>";
     Content += BlockContent;
     Content += "</br>";
-    /*
-    if (block.nHeight > getThirdHardforkBlock())
-    {
-        std::vector<std::string> votes[2];
-        for (int i = 0; i < 2; i++)
-        {
-            for (unsigned int j = 0; j < block.vvotes[i].size(); j++)
-            {
-                votes[i].push_back(block.vvotes[i][j].hash.ToString() + ':' + itostr(block.vvotes[i][j].n));
-            }
-        }
-        Content += "<h3>" + _("Votes +") + "</h3>";
-        Content += makeHTMLTable(&votes[1][0], votes[1].size(), 1);
-        Content += "</br>";
-        Content += "<h3>" + _("Votes -") + "</h3>";
-        Content += makeHTMLTable(&votes[0][0], votes[0].size(), 1);
-        Content += "</br>";
-    }
-    */
     Content += "<h2>" + _("Transactions") + "</h2>";
     Content += TxContent;
 

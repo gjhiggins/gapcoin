@@ -557,9 +557,6 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxToAddress(rec, false);
         case Amount:
             return formatTxAmount(rec);
-        // FIXME
-        // case BRICSpeech:
-        //      return formatBRICSpeech(rec, false);
         }
         break;
     case Qt::EditRole:
@@ -576,9 +573,6 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxToAddress(rec, true);
         case Amount:
             return rec->credit + rec->debit;
-        // FIXME
-        // case BRICSpeech:
-        //     return formatBRICSpeech(rec, false);
         }
         break;
     case Qt::ToolTipRole:
