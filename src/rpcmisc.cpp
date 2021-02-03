@@ -16,8 +16,12 @@
 #endif
 
 #include <stdint.h>
+#include <iostream>
+#include <fstream>
+#include <boost/format.hpp>
 
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem/operations.hpp>
 #include "json/json_spirit_utils.h"
 #include "json/json_spirit_value.h"
 
